@@ -14,33 +14,53 @@ const cx = classNames.bind(styles);
 function Search() {
     const [searchResults, setSearchResults] = useState([]);
     const [seachValue, setSearchValue] = useState('');
+    const [shoResult, setShowResult] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     const inputRef = useRef();
+
     useEffect(() => {
-        setTimeout(() => {
-            setSearchResults([1, 2, 3]);
-        }, 0);
-    }, []);
+        if (!seachValue.trim()) {
+            setSearchResults([]);
+            return;
+        }
+
+        setLoading(true);
+
+        fetch(`https://tiktok.fullstack.edu.vn/api/users/search?q=${encodeURIComponent(seachValue)}&type=less`)
+            .then((res) => res.json())
+            .then((res) => {
+                setSearchResults(res.data);
+                setLoading(false);
+            })
+            .catch(() => {
+                setLoading(false);
+            });
+    }, [seachValue]);
     const handleClear = () => {
         setSearchValue('');
         setSearchResults([]);
         inputRef.current.focus();
     };
+
+    const handleHideResults = () => {
+        setShowResult(false);
+    };
     return (
         <HeadlessTippy
             interactive
-            visible={searchResults.length}
+            visible={shoResult && searchResults.length > 0}
             render={(attrs) => (
                 <div className={cx('search-resut')} tabIndex="-1" {...attrs}>
                     <PopupWrapper>
                         <h4 className={cx('search-title')}>Account</h4>
-                        <AccountItem />
-                        <AccountItem />
-                        <AccountItem />
-                        <AccountItem />
+                        {searchResults.map((resut) => (
+                            <AccountItem key={resut.id} data={resut} />
+                        ))}
                     </PopupWrapper>
                 </div>
             )}
+            onClickOutside={handleHideResults}
         >
             <div className={cx('search')}>
                 <input
@@ -49,15 +69,15 @@ function Search() {
                     spellcheck={false}
                     value={seachValue}
                     onChange={(e) => setSearchValue(e.target.value)}
+                    onFocus={() => setShowResult(true)}
                 />
-                {!!seachValue && (
+                {!!seachValue && !loading && (
                     <button className={cx('clear')} onClick={handleClear}>
                         <FontAwesomeIcon icon={faCircleXmark} />
                     </button>
                 )}
 
-                {/* <FontAwesomeIcon className={cx('loading')} icon={faSpinner} /> */}
-                {/* Loading */}
+                {loading && <FontAwesomeIcon className={cx('loading')} icon={faSpinner} />}
 
                 <button className={cx('search-btn')}>
                     <SearchIcon />

@@ -2,30 +2,24 @@ import classNames from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faCircleQuestion,
-    faCircleXmark,
     faCoins,
     faEarthAsia,
     faEllipsisVertical,
     faGear,
     faKeyboard,
     faSignOut,
-    faSpinner,
     faUser,
 } from '@fortawesome/free-solid-svg-icons';
 import 'tippy.js/dist/tippy.css'; // optional
-import HeadlessTippy from '@tippyjs/react/headless';
 import Tippy from '@tippyjs/react';
 
 import Button from '~/components/Button';
-import { Wrapper as PopupWrapper } from '~/components/Popper';
 import styles from './Header.module.scss';
 import images from '~/assets/images';
-import AccountItem from 'src/components/AccountItem';
 import Menu from 'src/components/Popper/Menu';
-import { InboxIcon, MessageIcon, SearchIcon, UploadIcon } from 'src/components/Icons';
+import { InboxIcon, MessageIcon, UploadIcon } from 'src/components/Icons';
 import Images from 'src/components/Images';
-import Search from 'src/components/Search';
-// import { MessageIcon } from '~/components/Icons';
+import Search from '../Search';
 
 const cx = classNames.bind(styles);
 
