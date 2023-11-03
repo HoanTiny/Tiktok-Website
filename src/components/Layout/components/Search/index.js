@@ -1,12 +1,14 @@
 import HeadlessTippy from '@tippyjs/react/headless';
 import classNames from 'classnames/bind';
 import { useEffect, useState, useRef } from 'react';
+import * as searchService from '~/apiServices/searchService';
 
 import { faCircleXmark, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { Wrapper as PopupWrapper } from '~/components/Popper';
 import AccountItem from 'src/components/AccountItem';
 import { SearchIcon } from 'src/components/Icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useDebounce } from '~/hooks';
 import styles from './Search.module.scss';
 
 const cx = classNames.bind(styles);
@@ -17,26 +19,26 @@ function Search() {
     const [shoResult, setShowResult] = useState(true);
     const [loading, setLoading] = useState(false);
 
+    const debounceValue = useDebounce(seachValue, 500);
     const inputRef = useRef();
 
     useEffect(() => {
-        if (!seachValue.trim()) {
+        if (!debounceValue.trim()) {
             setSearchResults([]);
             return;
         }
 
-        setLoading(true);
+        const fetchApi = async () => {
+            setLoading(true);
 
-        fetch(`https://tiktok.fullstack.edu.vn/api/users/search?q=${encodeURIComponent(seachValue)}&type=less`)
-            .then((res) => res.json())
-            .then((res) => {
-                setSearchResults(res.data);
-                setLoading(false);
-            })
-            .catch(() => {
-                setLoading(false);
-            });
-    }, [seachValue]);
+            const result = await searchService.search(debounceValue);
+            setSearchResults(result);
+
+            setLoading(false);
+        };
+
+        fetchApi();
+    }, [debounceValue]);
     const handleClear = () => {
         setSearchValue('');
         setSearchResults([]);
@@ -46,6 +48,7 @@ function Search() {
     const handleHideResults = () => {
         setShowResult(false);
     };
+
     return (
         <HeadlessTippy
             interactive
@@ -68,7 +71,11 @@ function Search() {
                     placeholder="Search..."
                     spellcheck={false}
                     value={seachValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
+                    onChange={(e) => {
+                        e.target.value = e.target.value.trimStart();
+
+                        setSearchValue(e.target.value);
+                    }}
                     onFocus={() => setShowResult(true)}
                 />
                 {!!seachValue && !loading && (
