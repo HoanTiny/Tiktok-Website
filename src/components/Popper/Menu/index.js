@@ -5,6 +5,7 @@ import styles from './Menu.module.scss';
 import MenuItem from './MenuItem';
 import Header from './Header';
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 
 const cx = classNames.bind(styles);
 
@@ -34,31 +35,41 @@ function Menu({ children, items = [], onChange = defaultFn }) {
         });
     };
 
+    const handleBack = () => {
+        setHistory((prev) => prev.slice(0, prev.length - 1));
+    };
+
+    const rederResults = (attrs) => (
+        <div className={cx('menu-list')} tabIndex="-1" {...attrs}>
+            <PopupWrapper className={cx('menu-popper')}>
+                {history.length > 1 && <Header title={current.title} onback={handleBack} />}
+                <div className={cx('menu-body')}>{renderItems()}</div>
+            </PopupWrapper>
+        </div>
+    );
+
+    const handleResetToFirstPage = () => () => {
+        setHistory((prev) => prev.slice(0, 1));
+    };
+
     return (
         <Tippy
             interactive
             delay={[0, 700]}
             placement="bottom-end"
-            render={(attrs) => (
-                <div className={cx('menu-list')} tabIndex="-1" {...attrs}>
-                    <PopupWrapper className={cx('menu-popper')}>
-                        {history.length > 1 && (
-                            <Header
-                                title="Language"
-                                onback={() => {
-                                    setHistory((prev) => prev.slice(0, prev.length - 1));
-                                }}
-                            />
-                        )}
-                        <div className={cx('menu-body')}>{renderItems()}</div>
-                    </PopupWrapper>
-                </div>
-            )}
-            onHide={() => setHistory((prev) => prev.slice(0, 1))}
+            render={rederResults}
+            onHide={handleResetToFirstPage}
         >
             {children}
         </Tippy>
     );
 }
+
+Menu.propTypes = {
+    children: PropTypes.node.isRequired,
+    items: PropTypes.array,
+    hideOnClick: PropTypes.bool,
+    onChange: PropTypes.func,
+};
 
 export default Menu;
