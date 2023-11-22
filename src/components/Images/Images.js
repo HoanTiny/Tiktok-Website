@@ -15,16 +15,16 @@ const Images = forwardRef(({ src, alt, className, fallback: customFallback = ima
         <img
             className={classNames(styles.wrapper, className)}
             ref={ref}
-            {...props}
             src={fallback || src}
             alt={alt}
+            {...props}
             onError={handleError}
         />
     );
 });
 
 Images.defaultProps = {
-    src: PropTypes.string,
+    // src: PropTypes.string,
     alt: PropTypes.string,
     className: PropTypes.string,
     fallback: PropTypes.string,

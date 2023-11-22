@@ -3,7 +3,8 @@ import styles from './Home.module.scss';
 import Images from 'src/components/Images';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleCheck, faMusic } from '@fortawesome/free-solid-svg-icons';
-import Button from 'src/components/Button';
+import Button from '~/components/Button';
+import Video from './Video/Video';
 
 const cx = classNames.bind(styles);
 
@@ -14,7 +15,9 @@ function Home() {
                 <div className={cx('inner')}>
                     <Images
                         className={cx('avatar')}
-                        src="https://p16-sign-sg.tiktokcdn.com/aweme/100x100/tiktok-obj/1665757201241090.jpeg?x-expires=1700211600&x-signature=pnsa9y%2Bf469HJ3c3JkYq3q%2F%2FmeQ%3D"
+                        src="https://p16-sign-sg.tiktokcdn.com/aweme/100x100/tos-alisg-avt-0068/9ea83b5949dc0b215d4c8c0f282d3c10.jpeg?x-expires=1700722800&x-signature=d%2FMyB%2BN3mbWGkLyr27GwStH2r7g%3D"
+                        alt="Avatar"
+                        fallback="https://p16-sign-sg.tiktok"
                     />
 
                     <div className={cx('main-container')}>
@@ -37,6 +40,8 @@ function Home() {
                                 </Button>
                             </div>
                         </div>
+
+                        <Video />
                     </div>
                 </div>
             </div>

@@ -68,7 +68,8 @@ function Menu({ children, items = [], onChange = defaultFn }) {
 Menu.propTypes = {
     children: PropTypes.node.isRequired,
     items: PropTypes.array,
-    hideOnClick: PropTypes.bool,
+    // hideOnClick: PropTypes.bool,
+    hideOnClick: PropTypes.node,
     onChange: PropTypes.func,
 };
 
