@@ -1,5 +1,6 @@
 .video-wrapper {
     display: flex;
+    margin-top: 12px;
 }
 
 .video-container {
@@ -9,4 +10,34 @@
 
 .video {
     border-radius: 8px;
+}
+
+.video-interac {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    .btn-iterac {
+        display: flex;
+        flex-direction: column;
+        background-color: transparent;
+        align-items: center;
+
+        .btn-icon {
+            margin-bottom: 8px;
+            margin-top: 8px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: rgba(22, 24, 35, 0.06);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+    }
+}
+
+.cmt-icon {
+    object-fit: cover;
 }

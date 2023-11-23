@@ -161,7 +161,7 @@ export const LiveIcon = ({ width = '3.2rem', height = '3.2rem', className }) => 
     </svg>
 );
 
-export const LiveActiveIcon = ({ width = '3.2rem', height = '3.2rem', className }) => (
+export const LiveActiveIcon = ({ width = '2.4rem', height = '2.4rem', className }) => (
     <svg
         className={className}
         width={width}
@@ -175,5 +175,79 @@ export const LiveActiveIcon = ({ width = '3.2rem', height = '3.2rem', className 
             d="M23.25 23.134C23.9167 23.5189 23.9167 24.4811 23.25 24.866L17.25 28.3301C16.5833 28.715 15.75 28.2339 15.75 27.4641L15.75 20.5359C15.75 19.7661 16.5833 19.285 17.25 19.6699L23.25 23.134Z"
             fill="white"
         ></path>
+    </svg>
+);
+
+export const TymIcon = ({ width = '3.2rem', height = '3.2rem', className }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor">
+        <g fillRule="evenodd" clipPath="url(#heart-fill-03bd63df_a)" clipRule="evenodd">
+            <path d="M7.5 2.25c3 0 4.5 2 4.5 2s1.5-2 4.5-2c3.5 0 6 2.75 6 6.25 0 4-3.269 7.566-6.25 10.25C14.41 20.407 13 21.5 12 21.5s-2.45-1.101-4.25-2.75C4.82 16.066 1.5 12.5 1.5 8.5c0-3.5 2.5-6.25 6-6.25Z"></path>
+            <path
+                fill="black"
+                fillOpacity=".03"
+                d="M2.402 12.2c1.187 2.497 3.357 4.727 5.348 6.55C9.55 20.399 11 21.5 12 21.5s2.41-1.093 4.25-2.75c2.98-2.684 6.25-6.25 6.25-10.25 0-.087-.002-.174-.005-.26C20.567 13.661 13.68 18.5 11.75 18.5c-1.437 0-6.14-2.687-9.348-6.3Z"
+            ></path>
+        </g>
+    </svg>
+);
+
+export const CommentIcon = ({ width = '2.4rem', height = '2.4rem', className }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor">
+        <g fillRule="evenodd" clipPath="url(#heart-fill-03bd63df_a)" clipRule="evenodd">
+            <path d="M7.5 2.25c3 0 4.5 2 4.5 2s1.5-2 4.5-2c3.5 0 6 2.75 6 6.25 0 4-3.269 7.566-6.25 10.25C14.41 20.407 13 21.5 12 21.5s-2.45-1.101-4.25-2.75C4.82 16.066 1.5 12.5 1.5 8.5c0-3.5 2.5-6.25 6-6.25Z"></path>
+            <path
+                fill="black"
+                fillOpacity=".03"
+                d="M2.402 12.2c1.187 2.497 3.357 4.727 5.348 6.55C9.55 20.399 11 21.5 12 21.5s2.41-1.093 4.25-2.75c2.98-2.684 6.25-6.25 6.25-10.25 0-.087-.002-.174-.005-.26C20.567 13.661 13.68 18.5 11.75 18.5c-1.437 0-6.14-2.687-9.348-6.3Z"
+            ></path>
+        </g>
+    </svg>
+);
+
+export const BookMarkIcon = ({ width = '2.4rem', height = '2.4rem', className }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor">
+        <path
+            fill="currentColor"
+            d="M4 4.5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v15.13a1 1 0 0 1-1.555.831l-6.167-4.12a.5.5 0 0 0-.556 0l-6.167 4.12A1 1 0 0 1 4 19.63V4.5Z"
+        ></path>
+    </svg>
+);
+
+export const ShareIcon = ({ width = '2.4rem', height = '2.4rem', className }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor">
+        <path
+            fill="currentColor"
+            fillRule="evenodd"
+            d="M10.938 3.175a.674.674 0 0 1 1.138-.488l6.526 6.215c.574.547.554 1.47-.043 1.991l-6.505 5.676a.674.674 0 0 1-1.116-.508V13.49s-6.985-1.258-9.225 2.854c-.209.384-1.023.518-.857-1.395.692-3.52 2.106-9.017 10.082-9.017V3.175Z"
+            clipRule="evenodd"
+        ></path>
+        <path
+            fill="#161823"
+            fillRule="evenodd"
+            d="m15.754 6.212 1.295 2.59a1.122 1.122 0 0 1-.268 1.349l-5.799 5.042s-.28 1.403.562 1.403c.842 0 7.578-6.174 7.578-6.174s.28-.842-.561-1.684c-.843-.842-2.807-2.526-2.807-2.526Z"
+            clipRule="evenodd"
+            opacity=".03"
+        ></path>
+        <path
+            fill="url(#pc-share-44d9fe83_a)"
+            fillRule="evenodd"
+            d="M10.937 6.23v7.297s-6.683-.942-8.777 2.246C.146 18.839.331 12.309 3.363 9.057c3.033-3.252 7.574-2.827 7.574-2.827Z"
+            clipRule="evenodd"
+            opacity=".09"
+        ></path>
+        <defs>
+            <radialGradient
+                id="pc-share-44d9fe83_a"
+                cx="0"
+                cy="0"
+                r="1"
+                gradientTransform="rotate(-113.046 11.628 5.43) scale(8.93256 8.78076)"
+                gradientUnits="userSpaceOnUse"
+            >
+                <stop></stop>
+                <stop offset=".995" stopOpacity=".01"></stop>
+                <stop offset="1" stopOpacity=".01"></stop>
+            </radialGradient>
+        </defs>
     </svg>
 );
