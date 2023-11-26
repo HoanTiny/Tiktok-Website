@@ -85,6 +85,16 @@
     height: calc(450px + ((100vw - 768px) / 1152) * 200);
     width: 320px;
     margin-right: 20px;
+    position: relative;
+}
+
+.controls-video {
+    position: absolute;
+    bottom: 40px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 24px;
+    width: 100%;
 }
 
 .video {

@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind';
 import styles from './Video.module.scss';
-import { BookMarkIcon, CommentIcon, ShareIcon, TymIcon } from 'src/components/Icons';
+import { BookMarkIcon, CommentIcon, PlayIcon, ShareIcon, TymIcon, VolumbIcon } from 'src/components/Icons';
 // import Tippy from '@tippyjs/react';
 import Images from 'src/components/Images';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,11 +9,14 @@ import Button from '~/components/Button';
 import Tippy from '@tippyjs/react/headless';
 import ShareVideo from 'src/components/Popper/ShareVideo';
 import { useEffect, useState } from 'react';
+import { InView } from 'react-intersection-observer';
 import * as VideoListForYou from 'src/services/videoListForYouService';
 const cx = classNames.bind(styles);
 
 function Video() {
     const [videForYou, setVideoForYou] = useState([]);
+    const [playingVideo, setPlayingVideo] = useState(null);
+    const [playing, setPlaying] = useState(false);
 
     useEffect(() => {
         const randomPerPage = Math.floor(Math.random() * 10) + 1;
@@ -30,6 +33,54 @@ function Video() {
     const poperShare = () => {
         return <ShareVideo />;
     };
+
+    const handleInView = (inView, entry) => {
+        if (inView) {
+            const videoElement = entry.target.querySelector('video');
+            if (videoElement) {
+                // Dừng video đang phát trước đó (nếu có)
+                if (playingVideo && playingVideo !== videoElement) {
+                    videoElement.muted = true;
+
+                    playingVideo.pause();
+                }
+
+                // Bắt đầu phát video mới
+                videoElement.muted = false;
+                videoElement.play();
+                setPlayingVideo(videoElement);
+            }
+        }
+    };
+
+    const handlePlayClick = () => {
+        const videoElement = document.querySelector('.video'); // Thay '.video' bằng class hoặc id thích hợp
+        if (videoElement) {
+            if (playing) {
+                videoElement.pause();
+            } else {
+                videoElement.play().catch((error) => {
+                    console.error('Play failed:', error);
+                });
+            }
+            setPlaying(!playing);
+        }
+    };
+
+    // const handleInView = (inView, entry) => {
+    //     if (inView) {
+    //         const videoElement = entry.target.querySelector('video');
+    //         if (videoElement && !videoElement.paused) {
+    //             videoElement.play().catch((error) => {
+    //                 console.error('Play failed:', error);
+    //             });
+
+    //             videoElement.pause();
+    //         }
+    //         videoElement.play();
+    //     }
+    // };
+
     return (
         <>
             {videForYou.map((video) => (
@@ -72,9 +123,30 @@ function Video() {
 
                             <div className={cx('video-wrapper')}>
                                 <div className={cx('video-container')}>
-                                    <video className={cx('video')} width="100%" height="100%" controls>
-                                        <source src={video.file_url} type="video/mp4" />
-                                    </video>
+                                    <InView onChange={handleInView} rootMargin={'0px 0px -33% 0px'}>
+                                        {({ inView, ref }) => (
+                                            <div ref={ref} className={cx('video-container')}>
+                                                <video
+                                                    className={cx('video')}
+                                                    width="100%"
+                                                    height="100%"
+                                                    // controls
+                                                    muted
+                                                >
+                                                    <source src={video.file_url} type="video/mp4" />
+                                                </video>
+
+                                                <div className={cx('controls-video')}>
+                                                    <div className={cx('play-icon')} onClick={handlePlayClick}>
+                                                        <PlayIcon />
+                                                    </div>
+                                                    <div className={cx('volume-icon')}>
+                                                        <VolumbIcon />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </InView>
                                 </div>
 
                                 <div className={cx('video-interac')}>
