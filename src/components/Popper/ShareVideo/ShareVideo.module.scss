@@ -1,0 +1,41 @@
+.wrapper {
+    font-family: 'IBM Plex Sans', TikTokFont, Arial, Tahoma, PingFangSC, sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 21px;
+    width: 280px;
+    padding: 8px 0px;
+    max-height: 448px;
+    overflow: auto;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.12) 10px 8px 16px;
+    border-radius: 8px;
+    position: relative;
+
+    .shareVideo-tipArrow {
+        position: absolute;
+
+        display: block;
+        width: 24px;
+        height: 8px;
+        position: absolute;
+        bottom: -8px;
+        transform: rotate(180deg);
+    }
+}
+
+.shareVideo-item {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    justify-content: center;
+    padding: 11px 16px;
+    margin: 0px 3px 0px 4px;
+    cursor: pointer;
+
+    .shareVideo-item-content {
+        margin-left: 12px;
+        flex: 1;
+        text-align: left;
+    }
+}
