@@ -1,4 +1,5 @@
 import classNames from 'classnames/bind';
+import React, { useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faCircleQuestion,
@@ -22,6 +23,29 @@ import { InboxIcon, MessageIcon, UploadIcon } from 'src/components/Icons';
 import Images from 'src/components/Images/Images';
 import Search from '../Search';
 import config from '~/config';
+import ModalLogin from 'src/components/ModalLogin';
+import Popup from 'reactjs-popup';
+import styled from 'styled-components';
+
+const StyledPopup = styled(Popup)`
+    // use your custom style for ".popup-overlay"
+    &-overlay {
+        background: rgba(0, 0, 0, 0.5);
+    }
+    // use your custom style for ".popup-content"
+    &-content {
+        width: 483px;
+        border-radius: 8px;
+        transition: all 300ms cubic-bezier(0.075, 0.82, 0.165, 1) 0s;
+        transform: none;
+        margin: auto;
+        position: relative;
+        height: 642px;
+        overflow: hidden;
+        display: flex;
+        background-color: rgb(255, 255, 255);
+    }
+`;
 
 const cx = classNames.bind(styles);
 
@@ -57,8 +81,8 @@ const MENU_ITEMS = [
 ];
 
 function Header() {
-    const currentUser = true;
-
+    const currentUser = false;
+    const popupRef = useRef();
     //Handle logic
     const handleMenuChange = (menuItem) => {
         switch (menuItem.type) {
@@ -129,7 +153,16 @@ function Header() {
                     ) : (
                         <>
                             <Button text>Upload</Button>
-                            <Button primary>Log in</Button>
+                            <StyledPopup
+                                trigger={
+                                    <Button ref={popupRef} primary text className={cx('btn-loginin')}>
+                                        Đăng nhập
+                                    </Button>
+                                }
+                                modal
+                            >
+                                {(close) => <ModalLogin close={close} />}
+                            </StyledPopup>
                         </>
                     )}
 
