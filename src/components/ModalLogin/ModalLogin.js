@@ -1,5 +1,7 @@
 import classNames from 'classnames/bind';
 import styles from './ModalLogin.module.scss';
+import Popup from 'reactjs-popup';
+import styled from 'styled-components';
 
 import {
     CloseIcon,
@@ -12,6 +14,27 @@ import {
     KakaoIcon,
     AppleIcon,
 } from '~/components/Icons';
+import ModalLoginEmail from './ModalLoginEmail';
+
+const StyledPopup = styled(Popup)`
+    // use your custom style for ".popup-overlay"
+    &-overlay {
+        background: rgba(0, 0, 0, 0.5);
+    }
+    // use your custom style for ".popup-content"
+    &-content {
+        width: 483px;
+        border-radius: 8px;
+        transition: all 300ms cubic-bezier(0.075, 0.82, 0.165, 1) 0s;
+        transform: none;
+        margin: auto;
+        position: relative;
+        height: 642px;
+        overflow: hidden;
+        display: flex;
+        background-color: rgb(255, 255, 255);
+    }
+`;
 
 const cx = classNames.bind(styles);
 
@@ -32,6 +55,18 @@ function ModalLogin({ close }) {
                     <UserIcon />
                     <span>Số điện thoại / Email / TikTok ID</span>
                 </div>
+
+                <StyledPopup
+                    trigger={
+                        <div className={cx('content-item')}>
+                            <GoogleIcon />
+                            <span>Tiếp tục với Google</span>
+                        </div>
+                    }
+                    modal
+                >
+                    {(close) => <ModalLoginEmail close={close} />}
+                </StyledPopup>
 
                 <div className={cx('content-item')}>
                     <GoogleIcon />

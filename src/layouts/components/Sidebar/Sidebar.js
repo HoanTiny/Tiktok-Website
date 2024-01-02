@@ -98,6 +98,7 @@ function Sidebar() {
                                 </Button>
                             }
                             modal
+                            nested
                         >
                             {(close) => <ModalLogin close={close} />}
                         </StyledPopup>
