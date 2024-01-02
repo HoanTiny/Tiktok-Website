@@ -2,6 +2,7 @@ import classNames from 'classnames/bind';
 import styles from './ModalLoginEmail.module.scss';
 
 import { CloseIcon, BackIcon } from '~/components/Icons';
+import Button from 'src/components/Button';
 
 const cx = classNames.bind(styles);
 
@@ -9,7 +10,7 @@ function ModalLoginEmail({ close }) {
     return (
         <div className={cx('modal')}>
             <div className={cx('modal-header')}>
-                <button className={cx('back')}>
+                <button className={cx('back')} onClick={close}>
                     <BackIcon width="20px" height="20px" />
                 </button>
                 <button className={cx('close')} onClick={close}>
@@ -26,14 +27,28 @@ function ModalLoginEmail({ close }) {
                 </div>
 
                 <div className={cx('content-input')}>
-                    <select id="cars" name="cars">
-                        <option value="volvo">Volvo XC90</option>
-                        <option value="saab">Saab 95</option>
-                        <option value="mercedes">Mercedes SLK</option>
-                        <option value="audi">Audi TT</option>
-                    </select>
-                    <input type="text" className={cx('input-text')} placeholder="Số điện thoại" />
+                    <div className={cx('content-input-phone')}>
+                        <select id="cars" name="cars">
+                            <option value="volvo">Volvo XC90</option>
+                            <option value="saab">Saab 95</option>
+                            <option value="mercedes">Mercedes SLK</option>
+                            <option value="audi">Audi TT</option>
+                        </select>
+                        <input type="text" className={cx('input-text')} placeholder="Số điện thoại" />
+                    </div>
+
+                    <div className={cx('content-input-ma')}>
+                        <input type="number" className={cx('input-number')} placeholder="Nhập mã gồm 6 số" />
+                        <button className={cx('btn-sibmit-send')}>Gửi mã</button>
+                    </div>
                 </div>
+
+                <a href="facebook.com" className={cx('content-link')}>
+                    Đăng nhập với mật khẩu
+                </a>
+                <Button primary className={cx('content-btn-submit')} disabled>
+                    Đăng nhập
+                </Button>
             </div>
 
             <div className={cx('footer')}>

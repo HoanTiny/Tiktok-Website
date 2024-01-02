@@ -97,44 +97,125 @@
     }
 
     &-input {
-        background: rgba(22, 24, 35, 0.06);
-        border: 1px solid rgba(22, 24, 35, 0.12);
-        transition: all 0.3s ease 0s;
-        border-radius: 4px;
-        display: flex;
-
-        position: relative;
-        select {
+        &-phone {
+            background: rgba(22, 24, 35, 0.06);
+            border: 1px solid rgba(22, 24, 35, 0.12);
+            transition: all 0.3s ease 0s;
+            border-radius: 4px;
             display: flex;
-            -webkit-box-align: center;
-            align-items: center;
-            -webkit-box-pack: justify;
-            justify-content: space-between;
+
             position: relative;
-            padding: 12px;
-            height: 44px;
-            background: transparent;
-            border: none;
+            margin-bottom: 10px;
+            select {
+                display: flex;
+                -webkit-box-align: center;
+                align-items: center;
+                -webkit-box-pack: justify;
+                justify-content: space-between;
+                position: relative;
+                padding: 12px;
+                height: 44px;
+                background: transparent;
+                border: none;
 
-            appearance: none;
-            /* safari */
-            -webkit-appearance: none;
-            /* other styles for aesthetics */
+                appearance: none;
+                /* safari */
+                -webkit-appearance: none;
+                /* other styles for aesthetics */
+
+                cursor: pointer;
+                outline: none;
+            }
+
+            // .dropdown-icon {
+            //     position: absolute;
+            // }
+
+            .input-text {
+                background: transparent;
+                margin-left: 12px;
+            }
+
+            &::before {
+                content: '';
+                width: 1px;
+                height: 30px;
+                background: rgba(22, 24, 35, 0.12);
+                right: 0px;
+                left: 32%;
+                top: 8px;
+                position: absolute;
+            }
+
+            &::after {
+                --size: 0.5rem;
+                content: '';
+                position: absolute;
+                // right: 1rem;
+                pointer-events: none;
+                border-left: var(--size) solid transparent;
+                border-right: var(--size) solid transparent;
+                border-top: var(--size) solid black;
+                top: 45%;
+                left: 26%;
+            }
         }
 
-        .input-text {
-            background: transparent;
-        }
+        &-ma {
+            display: flex;
+            .input-number {
+                border-radius: 2px;
+                background-color: rgba(22, 24, 35, 0.06);
+                border: 1px solid rgba(22, 24, 35, 0.12);
+                padding-inline-start: 12px;
+                color: rgb(22, 24, 35);
+                line-height: 100%;
+                outline: none;
+                font-size: 16px;
+                caret-color: rgb(254, 44, 85);
+                width: 100%;
+                padding-inline-end: unset;
+            }
 
-        &::after {
-            content: '';
-            width: 1px;
-            height: 30px;
-            background: rgba(22, 24, 35, 0.12);
-            left: 133px;
-            top: 7px;
-            position: absolute;
+            input::-webkit-outer-spin-button,
+            input::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+
+            .btn-sibmit-send {
+                color: rgb(22, 24, 35);
+                font-weight: 600;
+                margin: 0px;
+                background-color: rgba(22, 24, 35, 0.06);
+                border-color: rgba(22, 24, 35, 0.12);
+                border-width: 1.5px;
+                border-style: solid;
+                border-radius: 0px 4px 4px 0px;
+                border-inline-start-width: 1.5px;
+                cursor: pointer;
+                font-size: 16px;
+                padding: 0px 16px;
+                height: 44px;
+                flex-shrink: 0;
+                box-sizing: content-box;
+                border-left: none;
+            }
         }
+    }
+
+    &-link {
+        color: rgba(22, 24, 35, 0.75);
+        font-weight: 600;
+        font-size: 12px;
+        display: inline-block;
+    }
+
+    &-btn-submit {
+        width: 100%;
+        display: block;
+
+        margin-top: 10px;
     }
 }
 
