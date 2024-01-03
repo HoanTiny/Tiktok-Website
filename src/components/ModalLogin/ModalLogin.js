@@ -50,11 +50,17 @@ function ModalLogin({ close }) {
                     <QRIcon />
                     <span>Sử dụng mã QR</span>
                 </div>
-
-                <div className={cx('content-item')}>
-                    <UserIcon />
-                    <span>Số điện thoại / Email / TikTok ID</span>
-                </div>
+                <StyledPopup
+                    trigger={
+                        <div className={cx('content-item')}>
+                            <UserIcon />
+                            <span>Số điện thoại / Email / TikTok ID</span>
+                        </div>
+                    }
+                    modal
+                >
+                    {(close) => <ModalLoginEmail close={close} />}
+                </StyledPopup>
 
                 <StyledPopup
                     trigger={
