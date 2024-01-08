@@ -4,12 +4,34 @@ import styles from './ModalLoginEmail.module.scss';
 import { CloseIcon, BackIcon, EyePass, EyePassActive } from '~/components/Icons';
 import Button from 'src/components/Button';
 import { useState } from 'react';
+import { login } from 'src/services/loginApiService';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 const cx = classNames.bind(styles);
 
 function ModalLoginEmail({ close }) {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [isRegisterMode, setRegisterMode] = useState(false);
-    const [isActiveEye, setActiveEye] = useState(false);
+    const [isActiveEye, setActiveEye] = useState(true);
+    const [isPasswordValid, setPasswordValid] = useState(true); // Add state for password validity
+    const [animate, setAnimation] = useState(false);
+    const handleLogin = async () => {
+        setAnimation(true);
+        if (!email || !password) {
+            console.log(`Email và mật khẩu là bắt buộc`);
+            return;
+        }
+
+        const data = await login(email, password); // Use await/async syntax to handle the login process
+        if (data && data.meta.token) {
+            setPasswordValid(true); // Set password validity to false when login fails
+        } else {
+            setPasswordValid(false); // Set password validity to false when login fails
+        }
+        setAnimation(false);
+    };
 
     const toggleMode = () => {
         setRegisterMode((prevMode) => !prevMode);
@@ -17,6 +39,17 @@ function ModalLoginEmail({ close }) {
 
     const toggleEyePass = () => {
         setActiveEye((prevMode) => !prevMode);
+    };
+
+    const handelChangeEmail = (e) => {
+        console.log(e.target.value);
+        setEmail(e.target.value);
+    };
+
+    const handelChangePassword = (e) => {
+        console.log(e.target.value);
+
+        setPassword(e.target.value);
     };
 
     return (
@@ -29,7 +62,7 @@ function ModalLoginEmail({ close }) {
                     <CloseIcon width="20px" height="20px" />
                 </button>
             </div>
-            <div className={cx('header')}>{isRegisterMode ? 'Đăng ký' : 'Đăng nhập'}</div>
+            <div className={cx('header')}>{isRegisterMode ? 'Đăng nhập' : 'Đăng ký'}</div>
             <div className={cx('content')}>
                 <div className={cx('content-header')}>
                     <div className={cx('content-header_phone')}>
@@ -42,17 +75,41 @@ function ModalLoginEmail({ close }) {
 
                 {isRegisterMode ? (
                     // Phần đăng ký
-                    <div className={cx('content-input')}>
-                        <div className={cx('content-input-phone')}>
-                            {/* Input cho số điện thoại */}
-                            <input type="text" className={cx('input-text')} placeholder="Số điện thoại" />
-                        </div>
+                    <form>
+                        <div className={cx('content-input')}>
+                            <div className={cx('content-input-phone')}>
+                                {/* Input cho số điện thoại */}
+                                <input
+                                    type="text"
+                                    className={cx('input-text')}
+                                    value={email}
+                                    onChange={handelChangeEmail}
+                                    placeholder="Email"
+                                    autoComplete="username"
+                                />
+                            </div>
 
-                        <div className={cx('content-input-phone', 'content-input-phone2')}>
-                            <input type="text" className={cx('input-text')} placeholder="Mật khẩu" />
-                            <div onClick={toggleEyePass}>{isActiveEye ? <EyePass /> : <EyePassActive />}</div>
+                            <div
+                                className={cx('content-input-phone', 'content-input-phone2', {
+                                    active2: !isPasswordValid,
+                                })}
+                            >
+                                <input
+                                    type={isActiveEye ? 'password' : 'text'}
+                                    className={cx('input-text')}
+                                    value={password}
+                                    onChange={handelChangePassword}
+                                    placeholder="Mật khẩu"
+                                    autoComplete="current-password"
+                                />
+                                {/* Code error message when not true password */}
+                                <div onClick={toggleEyePass}>{isActiveEye ? <EyePass /> : <EyePassActive />}</div>
+                            </div>
+                            {!isPasswordValid && (
+                                <div className={cx('error-message')}>Tài khoản hoặc mật khẩu không hợp lệ</div>
+                            )}
                         </div>
-                    </div>
+                    </form>
                 ) : (
                     // Phần đăng nhập
                     <div className={cx('content-input')}>
@@ -85,17 +142,22 @@ function ModalLoginEmail({ close }) {
                     </a>
                 )}
 
-                <Button primary className={cx('content-btn-submit')} disabled>
-                    {isRegisterMode ? 'Đăng ký' : 'Đăng nhập'}
+                <Button
+                    primary
+                    className={cx('content-btn-submit')}
+                    onClick={handleLogin}
+                    disabled={email === '' || password === ''}
+                >
+                    {animate ? <FontAwesomeIcon icon={faSpinner} /> : isRegisterMode ? 'Đăng nhập' : 'Đăng ký'}
                 </Button>
             </div>
 
             <div className={cx('footer')}>
                 <span className={cx('footer-text')}>
-                    {isRegisterMode ? 'Bạn đã có tài khoản? ' : 'Bạn chưa có tài khoản? '}
+                    {isRegisterMode ? 'Bạn chưa có tài khoản? ' : 'Bạn đã có tài khoản? '}
                 </span>
                 <a href="facebook.com" className={cx('footer-link')} onClick={toggleMode}>
-                    {isRegisterMode ? 'Đăng nhập' : 'Đăng ký'}
+                    {isRegisterMode ? 'Đăng ký' : 'Đăng nhập'}
                 </a>
             </div>
         </div>

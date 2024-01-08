@@ -104,17 +104,13 @@ function ModalLogin({ close }) {
             </div>
 
             <div className={cx('dieukhoan')}>
-                <p class="css-sai453-PText e1sbfgbz1">
-                    Bằng việc tiếp tục với tài khoản có vị trí tại{' '}
-                    <a href="/signup/country-selector" class="css-t5chka-ALink epl6mg0">
-                        Vietnam
-                    </a>
-                    , bạn đồng ý với{' '}
+                <p>
+                    Bằng việc tiếp tục với tài khoản có vị trí tại <a href="/signup/country-selector">Vietnam</a>, bạn
+                    đồng ý với{' '}
                     <a
                         target="_blank"
                         rel="noopener noreferrer"
                         href="https://www.tiktok.com/legal/terms-of-use?lang=vi-VN"
-                        class="css-1w6usl4-ALink e1sbfgbz2"
                     >
                         Điều khoản Sử dụng
                     </a>
@@ -123,7 +119,6 @@ function ModalLogin({ close }) {
                         target="_blank"
                         rel="noopener noreferrer"
                         href="https://www.tiktok.com/legal/privacy-policy?lang=vi-VN"
-                        class="css-1w6usl4-ALink e1sbfgbz2"
                     >
                         Chính sách Quyền riêng tư
                     </a>{' '}
