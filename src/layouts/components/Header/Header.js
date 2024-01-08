@@ -13,7 +13,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import 'tippy.js/dist/tippy.css'; // optional
 import Tippy from '@tippyjs/react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 
 import Button from '~/components/Button';
 import styles from './Header.module.scss';
@@ -81,7 +81,14 @@ const MENU_ITEMS = [
 ];
 
 function Header() {
-    const currentUser = false;
+    const token = localStorage.getItem('token');
+    let currentUser = true;
+
+    if (token) {
+        currentUser = true;
+    } else {
+        currentUser = false;
+    }
     const popupRef = useRef();
     //Handle logic
     const handleMenuChange = (menuItem) => {
@@ -89,7 +96,13 @@ function Header() {
             case 'language':
                 // Handle language
                 break;
+            case 'logout':
+                localStorage.removeItem('token');
+                currentUser = false;
+                window.location.reload();
 
+                Navigate('/');
+                break;
             default:
                 break;
         }
@@ -115,7 +128,7 @@ function Header() {
         {
             icon: <FontAwesomeIcon icon={faSignOut} />,
             title: 'Log out',
-            to: '/logout',
+            type: 'logout',
             separate: true,
         },
     ];

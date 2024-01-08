@@ -3,13 +3,64 @@ import styles from './ModalLoginEmail.module.scss';
 
 import { CloseIcon, BackIcon, EyePass, EyePassActive } from '~/components/Icons';
 import Button from 'src/components/Button';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { login } from 'src/services/loginAccountService';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 
 function ModalLoginEmail({ close }) {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [isRegisterMode, setRegisterMode] = useState(false);
-    const [isActiveEye, setActiveEye] = useState(false);
+    const [isActiveEye, setActiveEye] = useState(true);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [disabledBtn, setDisabledBtn] = useState(true);
+    const [animation, setAnimation] = useState(false);
+    let navigate = useNavigate();
+    useEffect(() => {
+        // Kiểm tra nếu email và password không rỗng thì bỏ disable button
+        if (email && password) {
+            setDisabledBtn(false);
+        } else {
+            setDisabledBtn(true);
+        }
+    }, [email, password]);
+
+    const handleLogin = async () => {
+        setAnimation(true);
+        if (!email || !password) {
+            console.log(`Email và mật khẩu là bắt buộc`);
+            return;
+        }
+        let res = await login(email, password);
+
+        if (res && res.meta.token) {
+            console.log('Đăng nhập thành công');
+            setErrorMessage('');
+            console.log(res);
+            localStorage.setItem('token', res.meta.token);
+
+            // Reload the page
+            window.location.reload();
+            navigate('/');
+        } else {
+            console.log('Đăng nhập thất bại');
+            setErrorMessage('Sai mật khẩu hoặc tài khoản');
+        }
+
+        setAnimation(false);
+    };
+
+    const handleChangeEmail = (e) => {
+        setEmail(e.target.value);
+    };
+
+    const handleChangePassword = (e) => {
+        setPassword(e.target.value);
+    };
 
     const toggleMode = () => {
         setRegisterMode((prevMode) => !prevMode);
@@ -29,7 +80,7 @@ function ModalLoginEmail({ close }) {
                     <CloseIcon width="20px" height="20px" />
                 </button>
             </div>
-            <div className={cx('header')}>{isRegisterMode ? 'Đăng ký' : 'Đăng nhập'}</div>
+            <div className={cx('header')}>{isRegisterMode ? 'Đăng nhập' : 'Đăng ký'}</div>
             <div className={cx('content')}>
                 <div className={cx('content-header')}>
                     <div className={cx('content-header_phone')}>
@@ -45,13 +96,26 @@ function ModalLoginEmail({ close }) {
                     <div className={cx('content-input')}>
                         <div className={cx('content-input-phone')}>
                             {/* Input cho số điện thoại */}
-                            <input type="text" className={cx('input-text')} placeholder="Số điện thoại" />
+                            <input
+                                type="text"
+                                className={cx('input-text')}
+                                placeholder="Email"
+                                value={email}
+                                onChange={handleChangeEmail}
+                            />
                         </div>
 
-                        <div className={cx('content-input-phone', 'content-input-phone2')}>
-                            <input type="text" className={cx('input-text')} placeholder="Mật khẩu" />
+                        <div className={cx('content-input-phone', 'content-input-phone2', { active2: errorMessage })}>
+                            <input
+                                type={isActiveEye ? 'password' : 'text'}
+                                className={cx('input-text')}
+                                placeholder="Mật khẩu"
+                                value={password}
+                                onChange={handleChangePassword}
+                            />
                             <div onClick={toggleEyePass}>{isActiveEye ? <EyePass /> : <EyePassActive />}</div>
                         </div>
+                        {errorMessage && <div className={cx('error-message')}>{errorMessage}</div>}
                     </div>
                 ) : (
                     // Phần đăng nhập
@@ -85,8 +149,14 @@ function ModalLoginEmail({ close }) {
                     </a>
                 )}
 
-                <Button primary className={cx('content-btn-submit')} disabled>
-                    {isRegisterMode ? 'Đăng ký' : 'Đăng nhập'}
+                <Button primary className={cx('content-btn-submit')} onClick={handleLogin} disabled={disabledBtn}>
+                    {animation ? (
+                        <FontAwesomeIcon className={cx('animate-spin')} icon={faSpinner} />
+                    ) : isRegisterMode ? (
+                        'Đăng nhập'
+                    ) : (
+                        'Đăng ký'
+                    )}
                 </Button>
             </div>
 
