@@ -88,6 +88,7 @@ function Sidebar() {
 
             {currentUser ? (
                 <>
+                    <hr />
                     <SuggestedAccount label="Suggested accounts" data={suggestedUsers} />
                     <SuggestedAccount label="Following accounts" />
                 </>
