@@ -8,8 +8,6 @@ import { useState } from 'react';
 const cx = classNames.bind(styles);
 
 function ModalLoginEmail({ close }) {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
     const [isRegisterMode, setRegisterMode] = useState(false);
     const [isActiveEye, setActiveEye] = useState(false);
 
@@ -42,7 +40,7 @@ function ModalLoginEmail({ close }) {
                     <CloseIcon width="20px" height="20px" />
                 </button>
             </div>
-            <div className={cx('header')}>{isRegisterMode ? 'Đăng nhập' : 'Đăng ký'}</div>
+            <div className={cx('header')}>{isRegisterMode ? 'Đăng ký' : 'Đăng nhập'}</div>
             <div className={cx('content')}>
                 <div className={cx('content-header')}>
                     <div className={cx('content-header_phone')}>

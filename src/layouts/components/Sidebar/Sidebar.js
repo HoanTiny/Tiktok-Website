@@ -45,14 +45,7 @@ const StyledPopup = styled(Popup)`
 const cx = classNames.bind(styles);
 
 function Sidebar() {
-    const token = localStorage.getItem('token');
-    let currentUser = true;
-
-    if (token) {
-        currentUser = true;
-    } else {
-        currentUser = false;
-    }
+    let currentUser = false;
     const popupRef = useRef();
     const [suggestedUsers, setSuggestedUsers] = useState([]);
     // const [followingAccount, setFollowingAccount] = useState([]);
@@ -61,7 +54,7 @@ function Sidebar() {
         userService.getSuggested({ page: 1, perPage: 5 }).then((data) => {
             setSuggestedUsers(data);
         });
-    }, []);
+    });
 
     return (
         <aside className={cx('wrapper')}>
@@ -88,6 +81,7 @@ function Sidebar() {
 
             {currentUser ? (
                 <>
+                    <hr />
                     <SuggestedAccount label="Suggested accounts" data={suggestedUsers} />
                     <SuggestedAccount label="Following accounts" />
                 </>
