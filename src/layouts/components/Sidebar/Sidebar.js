@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Popup from 'reactjs-popup';
 import classNames from 'classnames/bind';
 import styles from './Sidebar.module.scss';
@@ -13,14 +13,13 @@ import {
 } from '~/components/Icons';
 import Menu, { MenuItem } from './Menu';
 import * as userService from '~/services/userService';
-// import * as accountFollowingService from '~/services/accountFollowingService';
-
+import * as accountFollowingService from '~/services/accountFollowingService';
 import SuggestedAccount from 'src/components/SuggestedAccount';
 import config from 'src/config';
 import Button from 'src/components/Button';
 import ModalLogin from 'src/components/ModalLogin';
-
 import styled from 'styled-components';
+import FollowingAccount from 'src/components/FollowingAccount';
 
 const StyledPopup = styled(Popup)`
     // use your custom style for ".popup-overlay"
@@ -46,21 +45,46 @@ const cx = classNames.bind(styles);
 
 function Sidebar() {
     const token = localStorage.getItem('token');
-    let currentUser = true;
 
-    if (token) {
-        currentUser = true;
-    } else {
-        currentUser = false;
-    }
-    const popupRef = useRef();
     const [suggestedUsers, setSuggestedUsers] = useState([]);
-    // const [followingAccount, setFollowingAccount] = useState([]);
+    const [followingAccount, setFollowingAccount] = useState([]);
 
     useEffect(() => {
-        userService.getSuggested({ page: 1, perPage: 5 }).then((data) => {
-            setSuggestedUsers(data);
-        });
+        let isMounted = true;
+
+        userService
+            .getSuggested({ page: 1, perPage: 5 })
+            .then((data) => {
+                if (isMounted) {
+                    setSuggestedUsers(data);
+                }
+            })
+            .catch((error) => {
+                console.error('Error while fetching suggested users:', error);
+            });
+
+        return () => {
+            isMounted = false;
+        };
+    }, []);
+
+    useEffect(() => {
+        let isMounted = true;
+
+        accountFollowingService
+            .getfollowingsAccount({ page: 1 })
+            .then((data) => {
+                if (isMounted) {
+                    setFollowingAccount(data);
+                }
+            })
+            .catch((error) => {
+                console.error('Error while fetching following accounts:', error);
+            });
+
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
     return (
@@ -85,11 +109,10 @@ function Sidebar() {
                     activeIcon={<LiveActiveIcon />}
                 ></MenuItem>
             </Menu>
-
-            {currentUser ? (
+            {token ? (
                 <>
                     <SuggestedAccount label="Suggested accounts" data={suggestedUsers} />
-                    <SuggestedAccount label="Following accounts" />
+                    <FollowingAccount label="Following accounts" data={followingAccount} />
                 </>
             ) : (
                 <>
@@ -99,7 +122,7 @@ function Sidebar() {
                         </p>
                         <StyledPopup
                             trigger={
-                                <Button ref={popupRef} outline text className={cx('btn-loginin')}>
+                                <Button outline text className={cx('btn-loginin')}>
                                     Đăng nhập
                                 </Button>
                             }
@@ -108,15 +131,11 @@ function Sidebar() {
                         >
                             {(close) => <ModalLogin close={close} />}
                         </StyledPopup>
-                        {/* <Button outline text className={cx('btn-loginin')}>
-                            Đăng nhập
-                        </Button> */}
                     </div>
                     <div className={cx('btn-hieuung')}>
                         <EffectIcon />
                         <span>Tạo hiệu ứng</span>
                     </div>
-
                     <div className={cx('info-text')}>
                         <a className={cx('info-link')} href="https://facebook.com">
                             Giới thiệu
@@ -131,7 +150,6 @@ function Sidebar() {
                             Sự nghiệp
                         </a>
                     </div>
-
                     <div className={cx('info-text2')}>
                         <a className={cx('info-link')} href="https://facebook.com">
                             Tiktok for Good
@@ -145,16 +163,13 @@ function Sidebar() {
                         <a className={cx('info-link')} href="https://facebook.com">
                             Developers
                         </a>
-
                         <a className={cx('info-link')} href="https://facebook.com">
                             Minh bạch
                         </a>
-
                         <a className={cx('info-link')} href="https://facebook.com">
                             Tiktok Rewards
                         </a>
                     </div>
-
                     <div className={cx('info-text3')}>
                         <a className={cx('info-link')} href="https://facebook.com">
                             Trợ giúp
@@ -168,16 +183,13 @@ function Sidebar() {
                         <a className={cx('info-link')} href="https://facebook.com">
                             Quyền riêng tư
                         </a>
-
                         <a className={cx('info-link')} href="https://facebook.com">
                             Cổng thông tin tác giả
                         </a>
-
                         <a className={cx('info-link')} href="https://facebook.com">
                             Hướng dẫn cộng đồng
                         </a>
                     </div>
-
                     <div className={cx('info-text4')}>
                         <a className={cx('info-link')} href="https://facebook.com">
                             @Tiktok 2023
