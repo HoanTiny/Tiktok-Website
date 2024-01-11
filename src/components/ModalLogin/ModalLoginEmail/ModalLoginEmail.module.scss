@@ -114,7 +114,6 @@
             position: relative;
             margin-bottom: 10px;
             height: 44px;
-
             select {
                 display: flex;
                 -webkit-box-align: center;
@@ -174,7 +173,9 @@
 
             &.content-input-phone2 {
                 position: relative;
-
+                &.active2 {
+                    border: 1px solid red;
+                }
                 svg {
                     position: absolute;
                     right: 10px;
@@ -273,4 +274,22 @@
         position: absolute;
         display: flex;
     }
+}
+
+.error-message {
+    color: red;
+    font-size: 10px;
+}
+
+@keyframes spinLoading {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin {
+    animation: spinLoading 2s linear infinite;
 }
