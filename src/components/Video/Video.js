@@ -9,6 +9,7 @@ import {
     VolumbIcon,
     PauseIcon,
     MutedIcon,
+    TymActiveIcon,
 } from 'src/components/Icons';
 import Images from 'src/components/Images';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -17,6 +18,7 @@ import Button from '~/components/Button';
 import Tippy from '@tippyjs/react/headless';
 import ShareVideo from 'src/components/Popper/ShareVideo';
 import { useEffect, useState, useRef } from 'react';
+import likeVideoServirvice from '~/services/likeVideoService';
 
 const cx = classNames.bind(styles);
 
@@ -28,9 +30,9 @@ function Video({ data, isMuted, toggleAllVideosMute, volume, onVolumeChange }) {
     const videoRef = useRef();
     const [sliderValue, setSliderValue] = useState(0);
     const [valueVolume, setValueVolume] = useState(0);
+    const [isLiked, setIsLiked] = useState(data.is_liked);
     // Add a state to track if the video is in the viewport
     const [inViewport, setInViewport] = useState(false);
-
     useEffect(() => {
         const options = {
             root: null,
@@ -91,6 +93,25 @@ function Video({ data, isMuted, toggleAllVideosMute, volume, onVolumeChange }) {
         videoRef.current.play();
         setPlaying(true);
     };
+
+    const handleLikeVideo = (id) => {
+        console.log(`id`, id);
+        likeVideoServirvice(id)
+            .then((data) => {
+                setIsLiked(true);
+            })
+            .catch((error) => {
+                console.error('Error while fetching like video:', error);
+            });
+    };
+
+    useEffect(() => {
+        if (data.is_liked) {
+            console.log(`data.is_liked`, data.is_liked);
+            setIsLiked(true);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handlePauseVideo = () => {
         videoRef.current.pause();
@@ -263,10 +284,13 @@ function Video({ data, isMuted, toggleAllVideosMute, volume, onVolumeChange }) {
                             </div>
 
                             <div className={cx('video-interac')}>
-                                <button className={cx('btn-iterac')}>
-                                    <span className={cx('btn-icon')}>
-                                        <TymIcon />
-                                    </span>
+                                <button
+                                    className={cx('btn-iterac')}
+                                    onClick={() => {
+                                        handleLikeVideo(data.uuid);
+                                    }}
+                                >
+                                    <span className={cx('btn-icon')}>{isLiked ? <TymActiveIcon /> : <TymIcon />}</span>
                                     <strong>{data.likes_count}</strong>
                                 </button>
                                 <button className={cx('btn-iterac')}>

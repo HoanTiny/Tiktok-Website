@@ -1,5 +1,5 @@
 import classNames from 'classnames/bind';
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faCircleQuestion,
@@ -26,6 +26,7 @@ import config from '~/config';
 import ModalLogin from 'src/components/ModalLogin';
 import Popup from 'reactjs-popup';
 import styled from 'styled-components';
+import getCurrentUserService from 'src/services/getCurrentUserService';
 
 const StyledPopup = styled(Popup)`
     // use your custom style for ".popup-overlay"
@@ -81,15 +82,31 @@ const MENU_ITEMS = [
 ];
 
 function Header() {
+    const [userCurrent, setUserCurrent] = useState([]);
     const token = localStorage.getItem('token');
-    let currentUser = true;
+    const popupRef = useRef();
+    const currentUser = useRef();
 
     if (token) {
-        currentUser = true;
+        currentUser.current = true;
     } else {
-        currentUser = false;
+        currentUser.current = false;
     }
-    const popupRef = useRef();
+    useEffect(() => {
+        if (token) {
+            getCurrentUserService()
+                .then((user) => {
+                    setUserCurrent(user);
+                    currentUser.current = true;
+                })
+                .catch((error) => {
+                    console.log('111', error);
+                });
+        } else {
+            currentUser.current = false;
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [token]);
     //Handle logic
     const handleMenuChange = (menuItem) => {
         switch (menuItem.type) {
@@ -98,7 +115,7 @@ function Header() {
                 break;
             case 'logout':
                 localStorage.removeItem('token');
-                currentUser = false;
+                currentUser.current = false;
                 window.location.reload();
 
                 Navigate('/');
@@ -144,7 +161,8 @@ function Header() {
 
                 <Search />
                 <div className={cx('actions')}>
-                    {currentUser ? (
+                    {currentUser.current}
+                    {currentUser.current ? (
                         <>
                             <Tippy delay={[0, 50]} content="Upload video" placement="bottom">
                                 <button className={cx('action-btn')}>
@@ -180,10 +198,10 @@ function Header() {
                         </>
                     )}
 
-                    <Menu items={currentUser ? userMenu : MENU_ITEMS} onChange={handleMenuChange}>
-                        {currentUser ? (
+                    <Menu items={currentUser.current ? userMenu : MENU_ITEMS} onChange={handleMenuChange}>
+                        {currentUser.current ? (
                             <Images
-                                src="https://upload.wikimedia.org/wikipedia/en/thumb/7/7a/Manchester_United_FC_crest.svg/1200px-Manchester_United_FC_crest.svg.png"
+                                src={userCurrent.avatar}
                                 className={cx('user-avatar')}
                                 alt="Nguyen Van A"
                                 fallback="https://fullstack.edu.vn/static/media/f8-icon.18cd71cfcfa33566a22b.png"
