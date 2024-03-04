@@ -60,7 +60,7 @@ function CustomTabPanel(props) {
         >
             {value === index && (
                 <Box sx={{ p: 3 }}>
-                    <Typography>{children}</Typography>
+                    <Typography component="div">{children}</Typography>
                 </Box>
             )}
         </div>
@@ -147,36 +147,70 @@ function Profile() {
                     </StyledTabs>
                     <CustomTabPanel value={value} index={0}>
                         <div className={cx('video-list')}>
-                            <div className={cx('video-list_item')}>
-                                <video className={cx('video-list_item-video')}>
-                                    <source src={video} type="video/mp4" />
-                                </video>
+                            <a href="https://www.w3schools.com">
+                                <div className={cx('video-parent')}>
+                                    <div className={cx('video-parent_container')}>
+                                        <div className={cx('video-list_item')}>
+                                            <video className={cx('video-list_item-video')}>
+                                                <source src={video} type="video/mp4" />
+                                            </video>
+                                        </div>
+                                    </div>
+                                </div>
                                 <span>Test</span>
-                            </div>
+                            </a>
 
-                            <div className={cx('video-list_item')}>
-                                <video className={cx('video-list_item-video')}>
-                                    <source src={video} type="video/mp4" />
-                                </video>
-                            </div>
+                            <a href="https://www.w3schools.com">
+                                <div className={cx('video-parent')}>
+                                    <div className={cx('video-parent_container')}>
+                                        <div className={cx('video-list_item')}>
+                                            <video className={cx('video-list_item-video')}>
+                                                <source src={video} type="video/mp4" />
+                                            </video>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span>Test</span>
+                            </a>
 
-                            <div className={cx('video-list_item')}>
-                                <video className={cx('video-list_item-video')}>
-                                    <source src={video} type="video/mp4" />
-                                </video>
-                            </div>
+                            <a href="https://www.w3schools.com">
+                                <div className={cx('video-parent')}>
+                                    <div className={cx('video-parent_container')}>
+                                        <div className={cx('video-list_item')}>
+                                            <video className={cx('video-list_item-video')}>
+                                                <source src={video} type="video/mp4" />
+                                            </video>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span>Test</span>
+                            </a>
 
-                            <div className={cx('video-list_item')}>
-                                <video className={cx('video-list_item-video')}>
-                                    <source src={video} type="video/mp4" />
-                                </video>
-                            </div>
+                            <a href="https://www.w3schools.com">
+                                <div className={cx('video-parent')}>
+                                    <div className={cx('video-parent_container')}>
+                                        <div className={cx('video-list_item')}>
+                                            <video className={cx('video-list_item-video')}>
+                                                <source src={video} type="video/mp4" />
+                                            </video>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span>Test</span>
+                            </a>
 
-                            <div className={cx('video-list_item')}>
-                                <video className={cx('video-list_item-video')}>
-                                    <source src={video} type="video/mp4" />
-                                </video>
-                            </div>
+                            <a href="https://www.w3schools.com">
+                                <div className={cx('video-parent')}>
+                                    <div className={cx('video-parent_container')}>
+                                        <div className={cx('video-list_item')}>
+                                            <video className={cx('video-list_item-video')}>
+                                                <source src={video} type="video/mp4" />
+                                            </video>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span>Test</span>
+                            </a>
                         </div>
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={1}>
