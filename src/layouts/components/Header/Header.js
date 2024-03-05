@@ -83,6 +83,7 @@ const MENU_ITEMS = [
 
 function Header() {
     const [userCurrent, setUserCurrent] = useState([]);
+    const [userName, setUserName] = useState(''); // Sử dụng useState để lưu trữ userName
     const token = localStorage.getItem('token');
     const popupRef = useRef();
     const currentUser = useRef();
@@ -92,11 +93,13 @@ function Header() {
     } else {
         currentUser.current = false;
     }
+
     useEffect(() => {
         if (token) {
             getCurrentUserService()
                 .then((user) => {
                     setUserCurrent(user);
+                    setUserName(user.nickname);
                     currentUser.current = true;
                 })
                 .catch((error) => {
@@ -106,7 +109,8 @@ function Header() {
             currentUser.current = false;
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [token]);
+    }, [token, userName]);
+
     //Handle logic
     const handleMenuChange = (menuItem) => {
         switch (menuItem.type) {
@@ -117,8 +121,10 @@ function Header() {
                 localStorage.removeItem('token');
                 currentUser.current = false;
                 window.location.reload();
-
                 Navigate('/');
+                break;
+            case 'view-profile':
+                console.log('uswenamew', userName);
                 break;
             default:
                 break;
@@ -129,7 +135,8 @@ function Header() {
         {
             icon: <FontAwesomeIcon icon={faUser} />,
             title: 'View Profile',
-            to: '/feedback',
+            type: 'view-profile',
+            to: `${config.routes.profile}/'hoantiny'`,
         },
         {
             icon: <FontAwesomeIcon icon={faCoins} />,

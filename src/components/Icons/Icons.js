@@ -640,3 +640,13 @@ export const EyePassActive = ({ width = '2.4rem', height = '2.4rem', className }
         <path d="M24 27.21a3.21 3.21 0 1 1 0-6.42 3.21 3.21 0 0 1 0 6.42Zm0 4.29a7.5 7.5 0 1 0 0-15 7.5 7.5 0 0 0 0 15Z"></path>
     </svg>
 );
+
+export const CounterViewIcon = ({ width = '2.4rem', height = '2.4rem', className }) => (
+    <svg width="18" data-e2e="" height="18" viewBox="0 0 48 48" fill="#fff" xmlns="http://www.w3.org/2000/svg">
+        <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M16 10.554V37.4459L38.1463 24L16 10.554ZM12 8.77702C12 6.43812 14.5577 4.99881 16.5569 6.21266L41.6301 21.4356C43.5542 22.6038 43.5542 25.3962 41.6301 26.5644L16.5569 41.7873C14.5577 43.0012 12 41.5619 12 39.223V8.77702Z"
+        ></path>
+    </svg>
+);

@@ -1,5 +1,6 @@
 import classNames from 'classnames/bind';
 import * as React from 'react';
+import { useRef } from 'react';
 import styles from './Profile.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
@@ -13,6 +14,8 @@ import LockIcon from '@mui/icons-material/Lock';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 import video from './Rose.mp4';
+import { CounterViewIcon } from 'src/components/Icons';
+// import getAnUserService from '~/services/getAnUserService';
 
 const cx = classNames.bind(styles);
 
@@ -74,6 +77,30 @@ CustomTabPanel.propTypes = {
 };
 function Profile() {
     const [value, setValue] = React.useState(0);
+
+    const videoRef = useRef(null);
+
+    // useEffect(() =>{
+    //     getAnUserService(user).then((data) => {
+    //         console.log('data', data);
+    //     })
+    //     .catch((error) => {
+    //         console.log('error', error);
+    //     });
+    // })
+
+    const handleMouseEnter = () => {
+        if (videoRef.current) {
+            console.log('videoRef', videoRef.current);
+            videoRef.current.play();
+        }
+    };
+
+    const handleMouseLeave = () => {
+        if (videoRef.current) {
+            videoRef.current.pause();
+        }
+    };
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -151,65 +178,102 @@ function Profile() {
                                 <div className={cx('video-parent')}>
                                     <div className={cx('video-parent_container')}>
                                         <div className={cx('video-list_item')}>
-                                            <video className={cx('video-list_item-video')}>
+                                            <video
+                                                ref={videoRef}
+                                                className={cx('video-list_item-video')}
+                                                onMouseEnter={handleMouseEnter}
+                                                onMouseLeave={handleMouseLeave}
+                                                loop
+                                                muted
+                                            >
                                                 <source src={video} type="video/mp4" />
                                             </video>
                                         </div>
                                     </div>
+                                    <div className={cx('video-view')}>
+                                        <CounterViewIcon className={cx('video-view_icon')} />
+                                        <span className={cx('video-view_number')}>1.2M</span>
+                                    </div>
                                 </div>
-                                <span>Test</span>
+                                <div className={cx('video-list_title')}>
+                                    <span className={cx('video-title')}>Ngại quá bay ơi...</span>
+                                </div>
                             </a>
 
                             <a href="https://www.w3schools.com">
                                 <div className={cx('video-parent')}>
                                     <div className={cx('video-parent_container')}>
                                         <div className={cx('video-list_item')}>
-                                            <video className={cx('video-list_item-video')}>
+                                            <video className={cx('video-list_item-video')} controls>
                                                 <source src={video} type="video/mp4" />
                                             </video>
                                         </div>
                                     </div>
+                                    <div className={cx('video-view')}>
+                                        <CounterViewIcon className={cx('video-view_icon')} />
+                                        <span className={cx('video-view_number')}>1.2M</span>
+                                    </div>
                                 </div>
-                                <span>Test</span>
+                                <div className={cx('video-list_title')}>
+                                    <span className={cx('video-title')}>Ngại quá bay ơi Ngại quá bay ơi...</span>
+                                </div>
                             </a>
 
                             <a href="https://www.w3schools.com">
                                 <div className={cx('video-parent')}>
                                     <div className={cx('video-parent_container')}>
                                         <div className={cx('video-list_item')}>
-                                            <video className={cx('video-list_item-video')}>
+                                            <video className={cx('video-list_item-video')} controls>
                                                 <source src={video} type="video/mp4" />
                                             </video>
                                         </div>
                                     </div>
+                                    <div className={cx('video-view')}>
+                                        <CounterViewIcon className={cx('video-view_icon')} />
+                                        <span className={cx('video-view_number')}>1.2M</span>
+                                    </div>
                                 </div>
-                                <span>Test</span>
+                                <div className={cx('video-list_title')}>
+                                    <span className={cx('video-title')}>Ngại quá bay ơi...</span>
+                                </div>
                             </a>
 
                             <a href="https://www.w3schools.com">
                                 <div className={cx('video-parent')}>
                                     <div className={cx('video-parent_container')}>
                                         <div className={cx('video-list_item')}>
-                                            <video className={cx('video-list_item-video')}>
+                                            <video className={cx('video-list_item-video')} controls>
                                                 <source src={video} type="video/mp4" />
                                             </video>
                                         </div>
                                     </div>
+                                    <div className={cx('video-view')}>
+                                        <CounterViewIcon className={cx('video-view_icon')} />
+                                        <span className={cx('video-view_number')}>1.2M</span>
+                                    </div>
                                 </div>
-                                <span>Test</span>
+                                <div className={cx('video-list_title')}>
+                                    <span className={cx('video-title')}>Ngại quá bay ơi...</span>
+                                </div>
                             </a>
 
                             <a href="https://www.w3schools.com">
                                 <div className={cx('video-parent')}>
                                     <div className={cx('video-parent_container')}>
                                         <div className={cx('video-list_item')}>
-                                            <video className={cx('video-list_item-video')}>
+                                            <video className={cx('video-list_item-video')} controls>
                                                 <source src={video} type="video/mp4" />
                                             </video>
                                         </div>
                                     </div>
+                                    <div className={cx('video-view')}>
+                                        <CounterViewIcon className={cx('video-view_icon')} />
+                                        <span className={cx('video-view_number')}>1.2M</span>
+                                    </div>
                                 </div>
-                                <span>Test</span>
+                                <div className={cx('video-list_title')}>
+                                    <span className={cx('video-title')}>Ngại quá bay ơi...</span>
+                                </div>
                             </a>
                         </div>
                     </CustomTabPanel>
