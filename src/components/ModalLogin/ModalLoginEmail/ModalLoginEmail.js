@@ -42,7 +42,7 @@ function ModalLoginEmail({ close }) {
             setPasswordValid(true);
             setErrorMessage('');
             localStorage.setItem('token', res.meta.token);
-
+            localStorage.setItem('username', res.data.nickname);
             // Reload the page
             window.location.reload();
             navigate('/');

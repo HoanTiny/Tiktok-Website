@@ -14,7 +14,6 @@ import {
 import 'tippy.js/dist/tippy.css'; // optional
 import Tippy from '@tippyjs/react';
 import { Link, Navigate } from 'react-router-dom';
-
 import Button from '~/components/Button';
 import styles from './Header.module.scss';
 import images from '~/assets/images';
@@ -27,6 +26,7 @@ import ModalLogin from 'src/components/ModalLogin';
 import Popup from 'reactjs-popup';
 import styled from 'styled-components';
 import getCurrentUserService from 'src/services/getCurrentUserService';
+import { UserAuth } from '../../../components/store';
 
 const StyledPopup = styled(Popup)`
     // use your custom style for ".popup-overlay"
@@ -83,11 +83,12 @@ const MENU_ITEMS = [
 
 function Header() {
     const [userCurrent, setUserCurrent] = useState([]);
-    const [userName, setUserName] = useState(''); // Sử dụng useState để lưu trữ userName
     const token = localStorage.getItem('token');
     const popupRef = useRef();
     const currentUser = useRef();
 
+    const { userAuth } = UserAuth();
+    console.log(`userAuth`, userAuth);
     if (token) {
         currentUser.current = true;
     } else {
@@ -99,7 +100,6 @@ function Header() {
             getCurrentUserService()
                 .then((user) => {
                     setUserCurrent(user);
-                    setUserName(user.nickname);
                     currentUser.current = true;
                 })
                 .catch((error) => {
@@ -109,8 +109,7 @@ function Header() {
             currentUser.current = false;
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [token, userName]);
-
+    }, [token]);
     //Handle logic
     const handleMenuChange = (menuItem) => {
         switch (menuItem.type) {
@@ -123,9 +122,7 @@ function Header() {
                 window.location.reload();
                 Navigate('/');
                 break;
-            case 'view-profile':
-                console.log('uswenamew', userName);
-                break;
+
             default:
                 break;
         }
@@ -136,7 +133,7 @@ function Header() {
             icon: <FontAwesomeIcon icon={faUser} />,
             title: 'View Profile',
             type: 'view-profile',
-            to: `${config.routes.profile}/'hoantiny'`,
+            to: `/@${userAuth}`,
         },
         {
             icon: <FontAwesomeIcon icon={faCoins} />,

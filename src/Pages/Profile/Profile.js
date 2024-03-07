@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind';
 import * as React from 'react';
-import { useRef } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import styles from './Profile.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
@@ -13,11 +13,30 @@ import { styled } from '@mui/material/styles';
 import LockIcon from '@mui/icons-material/Lock';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
-import video from './Rose.mp4';
-import { CounterViewIcon } from 'src/components/Icons';
-// import getAnUserService from '~/services/getAnUserService';
+import { CounterViewIcon, LockIconVideoLiked, ShareProfileIcon } from 'src/components/Icons';
+import getAnUserService from '~/services/getAnUserService';
+import Popup from 'reactjs-popup';
+import ModalEditProfile from '../../components/ModalEditProfile';
 
 const cx = classNames.bind(styles);
+
+const StyledPopup = styled(Popup)`
+    // use your custom style for ".popup-overlay"
+    &-overlay {
+        background: rgba(0, 0, 0, 0.5);
+    }
+    // use your custom style for ".popup-content"
+    &-content {
+        border-radius: 8px;
+        transition: all 300ms cubic-bezier(0.075, 0.82, 0.165, 1) 0s;
+        transform: none;
+        margin: auto;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        background-color: rgb(255, 255, 255);
+    }
+`;
 
 const StyledTabs = styled((props) => (
     <Tabs {...props} TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }} />
@@ -77,17 +96,24 @@ CustomTabPanel.propTypes = {
 };
 function Profile() {
     const [value, setValue] = React.useState(0);
+    const [dataProfile, setDataProfile] = useState(null); // Khởi tạo dataProfile với giá trị ban đầu là null
 
     const videoRef = useRef(null);
-
-    // useEffect(() =>{
-    //     getAnUserService(user).then((data) => {
-    //         console.log('data', data);
-    //     })
-    //     .catch((error) => {
-    //         console.log('error', error);
-    //     });
-    // })
+    const url = new URL(window.location.href);
+    // Tách chuỗi theo dấu "/"
+    const match = url.pathname.match(/@([^/]+)/);
+    // Lấy ra nickname nếu có
+    const nickname = match ? match[1] : null;
+    useEffect(() => {
+        getAnUserService(nickname)
+            .then((data) => {
+                setDataProfile(data);
+            })
+            .catch((error) => {
+                console.log('error', error);
+            });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [nickname]);
 
     const handleMouseEnter = () => {
         if (videoRef.current) {
@@ -108,57 +134,50 @@ function Profile() {
 
     return (
         <div className={cx('wrapper')}>
-            <header className={cx('header')}>
-                <div className={cx('header__container')}>
-                    <div className={cx('header__container-avatar')}>
-                        <img
-                            src="https://p9-sign-sg.tiktokcdn.com/aweme/100x100/tos-alisg-avt-0068/1020e7310302e439310318eecab8c831.jpeg?lk3s=a5d48078&x-expires=1709276400&x-signature=yQywsiP11v2hIAfIWsMoFWwo3fE%3D"
-                            alt="avatar"
-                        />
-                    </div>
-                    <div className={cx('header__container__info')}>
-                        <h3>hoantiny01</h3>
-                        <p>Hoàn Tiny</p>
+            {dataProfile && (
+                <header className={cx('header')}>
+                    <div className={cx('header__container')}>
+                        <div className={cx('header__container-avatar')}>
+                            <img src={dataProfile.avatar} alt="avatar" />
+                        </div>
+                        <div className={cx('header__container__info')}>
+                            <h3>{dataProfile.nickname}</h3>
+                            <p>{dataProfile.first_name + ' ' + dataProfile.last_name}</p>
 
-                        <button>
-                            <FontAwesomeIcon icon={faPenToSquare} />
-                            <span>Sửa hồ sơ</span>
-                        </button>
-                    </div>
+                            <StyledPopup
+                                trigger={
+                                    <button>
+                                        <FontAwesomeIcon icon={faPenToSquare} />
+                                        <span>Sửa hồ sơ</span>
+                                    </button>
+                                }
+                                modal
+                            >
+                                {(close) => <ModalEditProfile close={close} />}
+                            </StyledPopup>
+                        </div>
 
-                    {/* Icon share */}
-                    <div className={cx('header__container-iconShare')}>
-                        <svg
-                            width="24"
-                            data-e2e=""
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path
-                                d="M12.5546 8.35111L13.3171 8.16468V7.37972V3.50006L21.4998 12.0001L13.3171 20.5001V16.3738V15.3664L12.3098 15.3738C8.838 15.3994 5.4275 17.0466 2.49983 19.5882C2.54612 19.2536 2.67769 18.641 2.94391 17.8329C3.3786 16.5132 4.01326 15.1988 4.88691 13.971C6.71045 11.4083 9.24414 9.16046 12.5546 8.35111Z"
-                                stroke="#161823"
-                                strokeWidth="2"
-                            ></path>
-                        </svg>
+                        {/* Icon share */}
+                        <div className={cx('header__container-iconShare')}>
+                            <ShareProfileIcon />
+                        </div>
                     </div>
-                </div>
-                <div className={cx('header__quantity')}>
-                    <span>
-                        <strong>198</strong> Đang Follow
-                    </span>
-                    <span>
-                        <strong>198</strong> Follower
-                    </span>
-                    <span>
-                        <strong>198</strong> Thích
-                    </span>
-                </div>
-                <div className={cx('header__bio')}>
-                    <span>https://beacons.ai/hoantiny</span>
-                </div>
-            </header>
+                    <div className={cx('header__quantity')}>
+                        <span>
+                            <strong>{dataProfile.followings_count}</strong> Đang Follow
+                        </span>
+                        <span>
+                            <strong>{dataProfile.followers_count}</strong> Follower
+                        </span>
+                        <span>
+                            <strong>{dataProfile.likes_count}</strong> Thích
+                        </span>
+                    </div>
+                    <div className={cx('header__bio')}>
+                        <span>{dataProfile.bio}</span>
+                    </div>
+                </header>
+            )}
             <div>
                 <Box sx={{ maxWidth: { xs: 320, sm: 100 + '%' }, bgcolor: 'background.paper' }}>
                     <StyledTabs
@@ -174,7 +193,35 @@ function Profile() {
                     </StyledTabs>
                     <CustomTabPanel value={value} index={0}>
                         <div className={cx('video-list')}>
-                            <a href="https://www.w3schools.com">
+                            {dataProfile &&
+                                dataProfile.videos.map((item, index) => (
+                                    <a href="https://www.w3schools.com" key={index}>
+                                        <div className={cx('video-parent')}>
+                                            <div className={cx('video-parent_container')}>
+                                                <div className={cx('video-list_item')}>
+                                                    <video
+                                                        ref={videoRef}
+                                                        className={cx('video-list_item-video')}
+                                                        onMouseEnter={handleMouseEnter}
+                                                        onMouseLeave={handleMouseLeave}
+                                                        loop
+                                                        muted
+                                                    >
+                                                        <source src={item.file_url} type="video/mp4" />
+                                                    </video>
+                                                </div>
+                                            </div>
+                                            <div className={cx('video-view')}>
+                                                <CounterViewIcon className={cx('video-view_icon')} />
+                                                <span className={cx('video-view_number')}>{item.views_count}</span>
+                                            </div>
+                                        </div>
+                                        <div className={cx('video-list_title')}>
+                                            <span className={cx('video-title')}>{item.description}</span>
+                                        </div>
+                                    </a>
+                                ))}
+                            {/* <a href="https://www.w3schools.com">
                                 <div className={cx('video-parent')}>
                                     <div className={cx('video-parent_container')}>
                                         <div className={cx('video-list_item')}>
@@ -274,14 +321,38 @@ function Profile() {
                                 <div className={cx('video-list_title')}>
                                     <span className={cx('video-title')}>Ngại quá bay ơi...</span>
                                 </div>
-                            </a>
+                            </a> */}
                         </div>
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={1}>
-                        Item Two
+                        {dataProfile && (
+                            <div className={cx('video-private-liked')}>
+                                <div className={cx('icon-locked')}>
+                                    <LockIconVideoLiked />
+                                </div>
+                                <h2 className={cx('headline-video-locked')}>
+                                    Video đã thích của người dùng này ở trạng thái riêng tư
+                                </h2>
+                                <p className={cx('headline-video-title')}>
+                                    Các video được thích bởi {dataProfile.nickname} hiện đang ẩn
+                                </p>
+                            </div>
+                        )}
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={2}>
-                        Item Three
+                        {dataProfile && (
+                            <div className={cx('video-private-liked')}>
+                                <div className={cx('icon-locked')}>
+                                    <LockIconVideoLiked />
+                                </div>
+                                <h2 className={cx('headline-video-locked')}>
+                                    Video đã thích của người dùng này ở trạng thái riêng tư
+                                </h2>
+                                <p className={cx('headline-video-title')}>
+                                    Các video được thích bởi {dataProfile.nickname} hiện đang ẩn
+                                </p>
+                            </div>
+                        )}
                     </CustomTabPanel>
                 </Box>
             </div>

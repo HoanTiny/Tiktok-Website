@@ -26,6 +26,8 @@
             height: 116px;
             img {
                 border-radius: 50%;
+                width: 100%;
+                height: 100%;
             }
         }
 
@@ -170,5 +172,30 @@
             width: 100%;
             border-radius: 6px;
         }
+    }
+}
+
+.video-private-liked {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+
+    .headline-video-locked {
+        font-size: 24px;
+        line-height: 30px;
+        font-weight: 700;
+        color: rgb(22, 24, 35);
+        margin-top: 24px;
+    }
+
+    .headline-video-title {
+        font-size: 16px;
+        line-height: 21px;
+        font-weight: 400;
+        color: rgba(22, 24, 35, 0.75);
+        margin-top: 8px;
     }
 }

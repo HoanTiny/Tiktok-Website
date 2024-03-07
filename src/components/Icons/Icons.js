@@ -428,9 +428,9 @@ export const EffectIcon = ({ width = '2.4rem', height = '2.4rem', className }) =
 
 export const CloseIcon = ({ width = '6rem', height = '6rem', className }) => (
     <svg
-        width="1em"
+        width={width}
         data-e2e=""
-        height="1em"
+        height={height}
         viewBox="0 0 55 54"
         fill="currentColor"
         xmlns="http://www.w3.org/2000/svg"
@@ -647,6 +647,34 @@ export const CounterViewIcon = ({ width = '2.4rem', height = '2.4rem', className
             fillRule="evenodd"
             clipRule="evenodd"
             d="M16 10.554V37.4459L38.1463 24L16 10.554ZM12 8.77702C12 6.43812 14.5577 4.99881 16.5569 6.21266L41.6301 21.4356C43.5542 22.6038 43.5542 25.3962 41.6301 26.5644L16.5569 41.7873C14.5577 43.0012 12 41.5619 12 39.223V8.77702Z"
+        ></path>
+    </svg>
+);
+
+export const ShareProfileIcon = ({ width = '2.4rem', height = '2.4rem', className }) => (
+    <svg width="24" data-e2e="" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="M12.5546 8.35111L13.3171 8.16468V7.37972V3.50006L21.4998 12.0001L13.3171 20.5001V16.3738V15.3664L12.3098 15.3738C8.838 15.3994 5.4275 17.0466 2.49983 19.5882C2.54612 19.2536 2.67769 18.641 2.94391 17.8329C3.3786 16.5132 4.01326 15.1988 4.88691 13.971C6.71045 11.4083 9.24414 9.16046 12.5546 8.35111Z"
+            stroke="#161823"
+            strokeWidth="2"
+        ></path>
+    </svg>
+);
+
+export const LockIconVideoLiked = ({ width = '2.4rem', height = '2.4rem', className }) => (
+    <svg
+        width="90"
+        data-e2e=""
+        height="90"
+        viewBox="0 0 48 48"
+        fill="currentColor"
+        xmlns="http://www.w3.org/2000/svg"
+        // eslint-disable-next-line react/style-prop-object
+    >
+        <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M24 8.5C20.9624 8.5 18.5 10.9624 18.5 14V18.5H29.5V14C29.5 10.9624 27.0376 8.5 24 8.5ZM32.5 18.5V14C32.5 9.30558 28.6944 5.5 24 5.5C19.3056 5.5 15.5 9.30558 15.5 14V18.5H11C9.61929 18.5 8.5 19.6193 8.5 21V40C8.5 41.3807 9.61929 42.5 11 42.5H37C38.3807 42.5 39.5 41.3807 39.5 40V21C39.5 19.6193 38.3807 18.5 37 18.5H32.5ZM11.5 21.5V39.5H36.5V21.5H11.5Z"
         ></path>
     </svg>
 );
