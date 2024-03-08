@@ -1,7 +1,7 @@
 .modal-edit-profile {
     display: flex;
     flex-direction: column;
-    height: 700px;
+    height: 740px;
 
     .header-modal {
         padding: 24px 24px 12px;
@@ -57,6 +57,12 @@
                     object-fit: cover;
                 }
 
+                .input-file {
+                    position: absolute;
+                    top: -9999px;
+                    left: -9999px;
+                }
+
                 .btn-change-avatar {
                     width: 32px;
                     height: 32px;
@@ -78,6 +84,7 @@
         }
 
         .modal-username {
+            padding: 16px 0px;
             display: flex;
             .modal-username_title {
                 line-height: 24px;
@@ -225,5 +232,43 @@
         position: absolute;
         width: 100%;
         bottom: 0px;
+
+        .button-cancel,
+        .button-save {
+            border-width: 1px;
+            border-style: solid;
+            border-radius: 4px;
+            color: rgb(22, 24, 35);
+            border-color: rgba(22, 24, 35, 0.12);
+            background-color: rgb(255, 255, 255);
+            min-height: 28px;
+            font-size: 14px;
+            display: flex;
+            position: relative;
+            -webkit-box-align: center;
+            align-items: center;
+            -webkit-box-pack: center;
+            justify-content: center;
+            user-select: none;
+            cursor: pointer;
+            box-sizing: border-box;
+            line-height: 24px;
+            padding: 7px 16px;
+            min-width: 96px;
+            height: 36px;
+            margin-left: 16px;
+        }
+
+        .button-save.disable {
+            border: none;
+            color: rgba(22, 24, 35, 0.34);
+            background-color: rgba(22, 24, 35, 0.06);
+            pointer-events: none;
+        }
+
+        .button-save.active {
+            color: rgb(255, 255, 255);
+            background-color: rgb(254, 44, 85);
+        }
     }
 }

@@ -14,4 +14,15 @@ export const post = async (path, body = {}, options = {}) => {
     return response.data;
 };
 
+export const put = async (path, body = {}, options = {}) => {
+    const response = await request.put(path, body, options);
+    return response.data;
+};
+
+export const patch = async (path, data, options) => {
+    const response = await request.patch(path, data, options);
+
+    return response;
+};
+
 export default request;
