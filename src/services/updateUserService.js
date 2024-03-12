@@ -1,31 +1,23 @@
 import * as request from 'src/utils/request';
 
-const updateProfile = async (avatar, nickname, lastName, bio) => {
+const updateProfile = async (formData) => {
     const token = localStorage.getItem('token');
-    console.log(avatar, nickname, lastName, bio);
+
     try {
-        const res = await request.patch(
-            'auth/me',
-            {
-                avatar: avatar,
-                nickname: nickname,
-                last_name: lastName,
-                bio: bio,
+        const res = await request.post('auth/me', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                Authorization: `Bearer ${token}`,
             },
-            {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${token}`,
-                },
-                params: {
-                    _method: 'PATCH',
-                },
+            params: {
+                _method: 'PATCH',
             },
-        );
+        });
         console.log(res.data);
         return res.data;
     } catch (err) {
-        return { errCode: err.response.status };
+        console.log(err);
+        return { errCode: err.response?.status };
     }
 };
 
