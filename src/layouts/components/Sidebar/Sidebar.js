@@ -48,6 +48,7 @@ function Sidebar() {
 
     const [suggestedUsers, setSuggestedUsers] = useState([]);
     const [followingAccount, setFollowingAccount] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
 
     useEffect(() => {
         let isMounted = true;
@@ -71,21 +72,27 @@ function Sidebar() {
     useEffect(() => {
         let isMounted = true;
 
-        accountFollowingService
-            .getfollowingsAccount({ page: 1 })
-            .then((data) => {
+        const fetchData = async () => {
+            try {
+                const data = await accountFollowingService.getfollowingsAccount({ page: currentPage });
                 if (isMounted) {
-                    setFollowingAccount(data);
+                    setFollowingAccount((prevData) => [...prevData, ...data]);
                 }
-            })
-            .catch((error) => {
+            } catch (error) {
                 console.error('Error while fetching following accounts:', error);
-            });
+            }
+        };
+
+        fetchData();
 
         return () => {
             isMounted = false;
         };
-    }, []);
+    }, [currentPage]);
+
+    const handleViewMore = () => {
+        setCurrentPage(currentPage + 1);
+    };
 
     return (
         <aside className={cx('wrapper')}>
@@ -112,7 +119,11 @@ function Sidebar() {
             {token ? (
                 <>
                     <SuggestedAccount label="Suggested accounts" data={suggestedUsers} />
-                    <FollowingAccount label="Following accounts" data={followingAccount} />
+                    <FollowingAccount
+                        label="Following accounts"
+                        data={followingAccount}
+                        handleViewMore={handleViewMore}
+                    />
                 </>
             ) : (
                 <>

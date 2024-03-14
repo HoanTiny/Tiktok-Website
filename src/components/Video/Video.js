@@ -20,6 +20,8 @@ import ShareVideo from 'src/components/Popper/ShareVideo';
 import { useEffect, useState, useRef } from 'react';
 import likeVideoServirvice from '~/services/likeVideoService';
 import unlikeVideoServirvice from '~/services/unlikeVideoService';
+import unFollowService from 'src/services/unFollowService';
+import followService from 'src/services/followUserService';
 
 const cx = classNames.bind(styles);
 
@@ -35,6 +37,8 @@ function Video({ data, isMuted, toggleAllVideosMute, volume, onVolumeChange }) {
     const [likeCount, setLikeCount] = useState(data.likes_count);
     // Add a state to track if the video is in the viewport
     const [inViewport, setInViewport] = useState(false);
+    const [isFollow, setIsFollow] = useState(data.user.is_followed);
+
     useEffect(() => {
         const options = {
             root: null,
@@ -94,6 +98,30 @@ function Video({ data, isMuted, toggleAllVideosMute, volume, onVolumeChange }) {
     const handlePLayVideo = () => {
         videoRef.current.play();
         setPlaying(true);
+    };
+
+    const handleFollowUser = (id) => {
+        if (isFollow) {
+            unFollowService(id)
+                .then((data) => {
+                    setIsFollow(false);
+                    console.log('unfollow', data);
+                })
+                .catch((error) => {
+                    console.error('Error while fetching follow user:', error);
+                });
+            return;
+        } else {
+            followService(id)
+                .then((data) => {
+                    setIsFollow(true);
+                    console.log('follow', data);
+                })
+                .catch((error) => {
+                    console.error('Error while fetching follow user:', error);
+                });
+            return;
+        }
     };
 
     const handleLikeVideo = (id) => {
@@ -233,9 +261,30 @@ function Video({ data, isMuted, toggleAllVideosMute, volume, onVolumeChange }) {
                                         <span className={cx('name-music')}>Âm nhạc video</span>
                                     </div>
                                 </div>
-                                <Button outline className={cx('follow-btn')}>
+                                {isFollow ? (
+                                    <Button
+                                        outline
+                                        className={cx('unfollow-btn')}
+                                        onClick={() => {
+                                            handleFollowUser(data.user_id);
+                                        }}
+                                    >
+                                        UnFollow
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        outline
+                                        className={cx('follow-btn')}
+                                        onClick={() => {
+                                            handleFollowUser(data.user_id);
+                                        }}
+                                    >
+                                        Follow
+                                    </Button>
+                                )}
+                                {/* <Button outline className={cx('follow-btn')} onClick={handleFollowUser(data.user_id)}>
                                     Follow
-                                </Button>
+                                </Button> */}
                             </div>
                         </div>
 
