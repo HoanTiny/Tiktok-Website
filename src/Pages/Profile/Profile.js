@@ -13,10 +13,14 @@ import { styled } from '@mui/material/styles';
 import LockIcon from '@mui/icons-material/Lock';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
-import { CounterViewIcon, LockIconVideoLiked, ShareProfileIcon } from 'src/components/Icons';
+import { CounterViewIcon, LockIconVideoLiked, ShareProfileIcon, UnfollowIcon } from 'src/components/Icons';
 import getAnUserService from '~/services/getAnUserService';
 import Popup from 'reactjs-popup';
 import ModalEditProfile from '../../components/ModalEditProfile';
+import { UserAuth } from 'src/components/store';
+import Button from 'src/components/Button';
+import unFollowService from 'src/services/unFollowService';
+import followService from 'src/services/followUserService';
 
 const cx = classNames.bind(styles);
 
@@ -97,6 +101,7 @@ CustomTabPanel.propTypes = {
 function Profile() {
     const [value, setValue] = React.useState(0);
     const [dataProfile, setDataProfile] = useState(null); // Khởi tạo dataProfile với giá trị ban đầu là null
+    const [isFollow, setIsFollow] = useState(null);
 
     const videoRef = useRef(null);
     const url = new URL(window.location.href);
@@ -104,16 +109,21 @@ function Profile() {
     const match = url.pathname.match(/@([^/]+)/);
     // Lấy ra nickname nếu có
     const nickname = match ? match[1] : null;
+
+    const { userAuth } = UserAuth();
+    console.log(`userAuth`, userAuth);
     useEffect(() => {
         getAnUserService(nickname)
             .then((data) => {
                 setDataProfile(data);
+                setIsFollow(data.is_followed);
             })
             .catch((error) => {
                 console.log('error', error);
             });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [nickname]);
+    console.log(`dataProfile`, dataProfile);
 
     const handleMouseEnter = () => {
         if (videoRef.current) {
@@ -132,6 +142,30 @@ function Profile() {
         setValue(newValue);
     };
 
+    const handleFollowUser = (id) => {
+        if (isFollow) {
+            unFollowService(id)
+                .then((data) => {
+                    setIsFollow(false);
+                    console.log('unfollow', data);
+                })
+                .catch((error) => {
+                    console.error('Error while fetching follow user:', error);
+                });
+            return;
+        } else {
+            followService(id)
+                .then((data) => {
+                    setIsFollow(true);
+                    console.log('follow', data);
+                })
+                .catch((error) => {
+                    console.error('Error while fetching follow user:', error);
+                });
+            return;
+        }
+    };
+
     return (
         <div className={cx('wrapper')}>
             {dataProfile && (
@@ -144,17 +178,44 @@ function Profile() {
                             <h3>{dataProfile.nickname}</h3>
                             <p>{dataProfile.first_name + ' ' + dataProfile.last_name}</p>
 
-                            <StyledPopup
-                                trigger={
-                                    <button>
-                                        <FontAwesomeIcon icon={faPenToSquare} />
-                                        <span>Sửa hồ sơ</span>
-                                    </button>
-                                }
-                                modal
-                            >
-                                {(close) => <ModalEditProfile close={close} data={dataProfile} />}
-                            </StyledPopup>
+                            {nickname === userAuth ? (
+                                <StyledPopup
+                                    trigger={
+                                        <button>
+                                            <FontAwesomeIcon icon={faPenToSquare} />
+                                            <span>Sửa hồ sơ</span>
+                                        </button>
+                                    }
+                                    modal
+                                >
+                                    {(close) => <ModalEditProfile close={close} data={dataProfile} />}
+                                </StyledPopup>
+                            ) : (
+                                <div>
+                                    {isFollow ? (
+                                        <div className={cx('main_btn')}>
+                                            <Button outline text className={cx('btn-sendMessage')}>
+                                                Gửi tin nhắn
+                                            </Button>
+
+                                            <div className={cx('icon-unfollow')}>
+                                                <UnfollowIcon />
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <Button
+                                            outline
+                                            text
+                                            className={cx('btn-follow')}
+                                            onClick={() => {
+                                                handleFollowUser(dataProfile.id);
+                                            }}
+                                        >
+                                            Theo dõi
+                                        </Button>
+                                    )}
+                                </div>
+                            )}
                         </div>
 
                         {/* Icon share */}

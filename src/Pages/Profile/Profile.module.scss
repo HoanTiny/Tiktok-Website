@@ -65,6 +65,38 @@
                     background-color: rgb(248, 248, 248);
                 }
             }
+
+            .main_btn {
+                display: flex;
+                align-items: center;
+                margin-top: 4px;
+
+                .btn-sendMessage {
+                    border: 1px solid rgb(254, 44, 85);
+                    margin-top: 0;
+                    margin-right: 4px;
+                }
+
+                .icon-unfollow {
+                    display: flex;
+                    -webkit-box-pack: center;
+                    justify-content: center;
+                    -webkit-box-align: center;
+                    align-items: center;
+                    box-sizing: border-box;
+                    width: 36px;
+                    height: 36px;
+                    border: 1px solid rgba(22, 24, 35, 0.12);
+                    border-radius: 4px;
+                    cursor: pointer;
+                    background-color: rgb(255, 255, 255);
+                }
+            }
+
+            .btn-follow {
+                color: rgb(254, 44, 85);
+                border-color: rgb(254, 44, 85);
+            }
         }
 
         &-iconShare {

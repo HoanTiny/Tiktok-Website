@@ -10,6 +10,7 @@ export function AuthProvider({ children }) {
     const tokenStr = localStorage.getItem('token') ?? '';
     const userAuth = localStorage.getItem('username') ?? '';
     console.log(1111, userAuth);
+
     const value = {
         tokenStr,
         userAuth,
