@@ -21,7 +21,9 @@ import { UserAuth } from 'src/components/store';
 import Button from 'src/components/Button';
 import unFollowService from 'src/services/unFollowService';
 import followService from 'src/services/followUserService';
-
+import { useLocation } from 'react-router-dom';
+import 'react-loading-skeleton/dist/skeleton.css';
+import Skeleton from 'react-loading-skeleton';
 const cx = classNames.bind(styles);
 
 const StyledPopup = styled(Popup)`
@@ -99,10 +101,12 @@ CustomTabPanel.propTypes = {
     value: PropTypes.number.isRequired,
 };
 function Profile() {
+    const location = useLocation();
+
     const [value, setValue] = React.useState(0);
     const [dataProfile, setDataProfile] = useState(null); // Khởi tạo dataProfile với giá trị ban đầu là null
     const [isFollow, setIsFollow] = useState(null);
-
+    const [pathname, setPathname] = useState(location.pathname);
     const videoRef = useRef(null);
     const url = new URL(window.location.href);
     // Tách chuỗi theo dấu "/"
@@ -112,17 +116,28 @@ function Profile() {
 
     const { userAuth } = UserAuth();
     console.log(`userAuth`, userAuth);
+    console.log(`location`, location.pathname, nickname);
+
+    useEffect(() => {
+        // Update state pathname mỗi khi location.pathname thay đổi
+        setDataProfile(null);
+        setPathname(location.pathname);
+    }, [location.pathname]);
+
     useEffect(() => {
         getAnUserService(nickname)
             .then((data) => {
-                setDataProfile(data);
-                setIsFollow(data.is_followed);
+                setTimeout(() => {
+                    setDataProfile(data);
+                    setIsFollow(data.is_followed);
+                }, 2000);
             })
             .catch((error) => {
                 console.log('error', error);
             });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [nickname]);
+    }, [pathname]);
+
     console.log(`dataProfile`, dataProfile);
 
     const handleMouseEnter = () => {
@@ -168,7 +183,7 @@ function Profile() {
 
     return (
         <div className={cx('wrapper')}>
-            {dataProfile && (
+            {dataProfile ? (
                 <header className={cx('header')}>
                     <div className={cx('header__container')}>
                         <div className={cx('header__container-avatar')}>
@@ -177,7 +192,6 @@ function Profile() {
                         <div className={cx('header__container__info')}>
                             <h3>{dataProfile.nickname}</h3>
                             <p>{dataProfile.first_name + ' ' + dataProfile.last_name}</p>
-
                             {nickname === userAuth ? (
                                 <StyledPopup
                                     trigger={
@@ -197,7 +211,6 @@ function Profile() {
                                             <Button outline text className={cx('btn-sendMessage')}>
                                                 Gửi tin nhắn
                                             </Button>
-
                                             <div className={cx('icon-unfollow')}>
                                                 <UnfollowIcon />
                                             </div>
@@ -238,7 +251,29 @@ function Profile() {
                         <span>{dataProfile.bio}</span>
                     </div>
                 </header>
+            ) : (
+                <div className={cx('header')}>
+                    <div className={cx('header__container')}>
+                        <div className={cx('header__container-avatar')}>
+                            <Skeleton circle height={100} width={100} />
+                        </div>
+                        <div className={cx('header__container__info')}>
+                            <Skeleton height={20} width={200} />
+                            <Skeleton height={15} width={150} />
+                            <Skeleton height={15} width={150} />
+                        </div>
+                    </div>
+                    <div className={cx('header__quantity')}>
+                        <Skeleton height={20} width={100} />
+                        <Skeleton height={20} width={100} />
+                        <Skeleton height={20} width={100} />
+                    </div>
+                    <div className={cx('header__bio')}>
+                        <Skeleton height={50} width="100%" />
+                    </div>
+                </div>
             )}
+
             <div>
                 <Box sx={{ maxWidth: { xs: 320, sm: 100 + '%' }, bgcolor: 'background.paper' }}>
                     <StyledTabs
@@ -252,7 +287,7 @@ function Profile() {
                         <StyledTab icon={<LockIcon />} label="Yêu thích" iconPosition="start" />
                         <StyledTab icon={<LockIcon />} label="Đã thích" iconPosition="start" />
                     </StyledTabs>
-                    <CustomTabPanel value={value} index={0}>
+                    {/* <CustomTabPanel value={value} index={0}>
                         <div className={cx('video-list')}>
                             {dataProfile &&
                                 dataProfile.videos.map((item, index) => (
@@ -282,6 +317,48 @@ function Profile() {
                                         </div>
                                     </a>
                                 ))}
+
+                            
+                        </div>
+                    </CustomTabPanel> */}
+
+                    <CustomTabPanel value={value} index={0}>
+                        <div className={cx('video-list')}>
+                            {!dataProfile
+                                ? // Hiển thị skeleton khi dữ liệu đang được tải
+                                  [...Array(5)].map((_, index) => (
+                                      <div key={index} className={cx('video-parent')}>
+                                          <Skeleton height={200} width={300} />
+                                      </div>
+                                  ))
+                                : // Hiển thị danh sách video khi dữ liệu đã được tải
+                                  dataProfile.videos.map((item, index) => (
+                                      <a href="https://www.w3schools.com" key={index}>
+                                          <div className={cx('video-parent')}>
+                                              <div className={cx('video-parent_container')}>
+                                                  <div className={cx('video-list_item')}>
+                                                      <video
+                                                          ref={videoRef}
+                                                          className={cx('video-list_item-video')}
+                                                          onMouseEnter={handleMouseEnter}
+                                                          onMouseLeave={handleMouseLeave}
+                                                          loop
+                                                          muted
+                                                      >
+                                                          <source src={item.file_url} type="video/mp4" />
+                                                      </video>
+                                                  </div>
+                                              </div>
+                                              <div className={cx('video-view')}>
+                                                  <CounterViewIcon className={cx('video-view_icon')} />
+                                                  <span className={cx('video-view_number')}>{item.views_count}</span>
+                                              </div>
+                                          </div>
+                                          <div className={cx('video-list_title')}>
+                                              <span className={cx('video-title')}>{item.description}</span>
+                                          </div>
+                                      </a>
+                                  ))}
                         </div>
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={1}>

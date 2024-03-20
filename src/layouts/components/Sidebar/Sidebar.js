@@ -49,15 +49,16 @@ function Sidebar() {
     const [suggestedUsers, setSuggestedUsers] = useState([]);
     const [followingAccount, setFollowingAccount] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [currentPerPage, setCurrentPerPage] = useState(1);
 
     useEffect(() => {
         let isMounted = true;
-
+        console.log('currentPerPage', currentPerPage);
         userService
-            .getSuggested({ page: 1, perPage: 5 })
+            .getSuggested({ page: currentPerPage, perPage: 4 })
             .then((data) => {
                 if (isMounted) {
-                    setSuggestedUsers(data);
+                    setSuggestedUsers((prevData) => [...prevData, ...data]);
                 }
             })
             .catch((error) => {
@@ -67,31 +68,38 @@ function Sidebar() {
         return () => {
             isMounted = false;
         };
-    }, []);
+    }, [currentPerPage]);
 
     useEffect(() => {
         let isMounted = true;
 
-        const fetchData = async () => {
-            try {
-                const data = await accountFollowingService.getfollowingsAccount({ page: currentPage });
-                if (isMounted) {
-                    setFollowingAccount((prevData) => [...prevData, ...data]);
+        if (token) {
+            const fetchData = async () => {
+                try {
+                    const data = await accountFollowingService.getfollowingsAccount({ page: currentPage });
+                    if (isMounted) {
+                        setFollowingAccount((prevData) => [...prevData, ...data]);
+                    }
+                } catch (error) {
+                    console.error('Error while fetching following accounts:', error);
                 }
-            } catch (error) {
-                console.error('Error while fetching following accounts:', error);
-            }
-        };
+            };
 
-        fetchData();
+            fetchData();
+        }
 
         return () => {
             isMounted = false;
         };
-    }, [currentPage]);
+    }, [currentPage, token]);
 
     const handleViewMore = () => {
         setCurrentPage(currentPage + 1);
+    };
+
+    const handleViewMorePerPage = () => {
+        setCurrentPerPage(currentPerPage + 5);
+        console.log('currentPerPage2', currentPerPage);
     };
 
     return (
@@ -118,7 +126,11 @@ function Sidebar() {
             </Menu>
             {token ? (
                 <>
-                    <SuggestedAccount label="Suggested accounts" data={suggestedUsers} />
+                    <SuggestedAccount
+                        label="Suggested accounts"
+                        data={suggestedUsers}
+                        handleViewMorePerPage={handleViewMorePerPage}
+                    />
                     <FollowingAccount
                         label="Following accounts"
                         data={followingAccount}
