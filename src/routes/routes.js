@@ -10,6 +10,7 @@ import Profile from '~/Pages/Profile';
 import Upload from '~/Pages/Upload';
 import Search from '~/Pages/Search';
 import Live from '~/Pages/Live';
+import DetailVideo from '~/Pages/DetailVideo';
 
 const publicRoutes = [
     { path: config.routes.home, component: Home },
@@ -18,6 +19,7 @@ const publicRoutes = [
     { path: `${config.routes.profile}`, component: Profile },
     { path: config.routes.upload, component: Upload, layout: HeaderOnly },
     { path: config.routes.search, component: Search, layout: null },
+    { path: `${config.routes.detailVideo}`, component: DetailVideo, layout: null },
 ];
 const privateRoutes = [];
 

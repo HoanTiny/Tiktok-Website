@@ -22,6 +22,7 @@ import likeVideoServirvice from '~/services/likeVideoService';
 import unlikeVideoServirvice from '~/services/unlikeVideoService';
 import unFollowService from 'src/services/unFollowService';
 import followService from 'src/services/followUserService';
+import { Link } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 
@@ -290,16 +291,18 @@ function Video({ data, isMuted, toggleAllVideosMute, volume, onVolumeChange }) {
 
                         <div className={cx('video-wrapper')}>
                             <div className={cx('video-container')}>
-                                <video
-                                    className={cx('video')}
-                                    width="100%"
-                                    height="100%"
-                                    // controls
-                                    ref={videoRef}
-                                    onEnded={handleVideoEnd}
-                                >
-                                    <source src={data.file_url} type="video/mp4" />
-                                </video>
+                                <Link to={`/@${data.user.nickname}/video/${data.uuid}`}>
+                                    <video
+                                        className={cx('video')}
+                                        width="100%"
+                                        height="100%"
+                                        // controls
+                                        ref={videoRef}
+                                        onEnded={handleVideoEnd}
+                                    >
+                                        <source src={data.file_url} type="video/mp4" />
+                                    </video>
+                                </Link>
 
                                 <div className={cx('controls-video')}>
                                     <div className={cx('play-icon')} onClick={toggleVideo}>
