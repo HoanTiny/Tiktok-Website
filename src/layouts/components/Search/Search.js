@@ -13,7 +13,7 @@ import styles from './Search.module.scss';
 
 const cx = classNames.bind(styles);
 
-function Search() {
+function Search({ className }) {
     const [searchResults, setSearchResults] = useState([]);
     const [seachValue, setSearchValue] = useState('');
     const [shoResult, setShowResult] = useState(true);
@@ -51,7 +51,7 @@ function Search() {
 
     return (
         // Using a wrapper <div> or <span> tag around the reference element solves this by creating a new parentNode context.
-        <div>
+        <div className={cx(`${className}`)}>
             <HeadlessTippy
                 interactive
                 visible={shoResult && searchResults.length > 0}

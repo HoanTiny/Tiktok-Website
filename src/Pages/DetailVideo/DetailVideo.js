@@ -3,13 +3,16 @@ import style from './DetailVideo.module.scss';
 import getVideoService from 'src/services/getVideoService';
 
 import { useEffect, useState } from 'react';
+import { CloseIcon, MoreIcon, SearchIcon } from 'src/components/Icons';
+import Search from 'src/layouts/components/Search';
 
 const cx = classNames.bind(style);
+
 export default function DetailsVideo() {
     const [video, setVideo] = useState({});
     const currentURL = window.location.href;
 
-    // // Lấy đoạn cuối cùng của đường dẫn URL
+    // Lấy đoạn cuối cùng của đường dẫn URL
     const pathSegments = currentURL.split('/');
     const videoId = pathSegments[pathSegments.length - 1];
     console.log('Video ID:', videoId);
@@ -17,29 +20,68 @@ export default function DetailsVideo() {
     useEffect(() => {
         const fetchVideo = async () => {
             try {
-                const video = await getVideoService(videoId);
-                setVideo(video);
-                console.log('Check video: ', video);
+                const videoData = await getVideoService(videoId);
+                setVideo(videoData);
+                console.log('Check video: ', videoData);
             } catch (error) {
                 console.log('error', error);
             }
         };
         fetchVideo();
     }, [videoId]);
+
+    const urlVideo = video.file_url;
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('video-container')}>
-                <video className={cx('video')} controls>
-                    <source src={video.videoUrl} />
-                </video>
+                <header className={cx('video-container__header')}>
+                    <CloseIcon className={cx('icon-close')} />
+                    {/* <div className={cx('input-search')}>
+                        <input type="text" placeholder="Tìm kiếm liên quan" />
+                        <button>
+                            <SearchIcon />
+                        </button>
+                    </div> */}
+
+                    <Search className={cx('input-search')} />
+                    <MoreIcon className={cx('icon-more')} />
+                </header>
+                {/* Sử dụng thuộc tính autoPlay để phát video tự động và controls để hiển thị các nút điều khiển */}
+                {video && (
+                    <>
+                        <div className={cx('video-container_imgBlur')}>
+                            <span className={cx('video-thumb')}>
+                                <picture>
+                                    <img
+                                        alt=""
+                                        decoding="async"
+                                        srcset={video.thumb_url}
+                                        src={video.thumb_url}
+                                        imagex-type="react"
+                                        imagex-version="0.3.10"
+                                    />
+                                </picture>
+                            </span>
+                        </div>
+                        <div className={cx('video-container_img')}>
+                            <div className={cx('video-container_img--video')}>
+                                <video controls autoPlay src={urlVideo}>
+                                    <source src={urlVideo} type="video/mp4" />
+                                </video>
+                            </div>
+                        </div>
+                    </>
+                )}
             </div>
 
             <div className={cx('video-info')}>
+                {/* Sử dụng dữ liệu thực tế của video thay vì các giá trị cố định */}
                 <div className={cx('video-title')}>
-                    <h1>Video Title</h1>
+                    <h1>{video.title}</h1>
                 </div>
                 <div className={cx('video-description')}>
-                    <p>Video Description</p>
+                    <p>{video.description}</p>
                 </div>
             </div>
         </div>
