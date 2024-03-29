@@ -13,7 +13,7 @@ import styles from './Search.module.scss';
 
 const cx = classNames.bind(styles);
 
-function Search({ className }) {
+function Search({ className, bgrInput = false, placeholder }) {
     const [searchResults, setSearchResults] = useState([]);
     const [seachValue, setSearchValue] = useState('');
     const [shoResult, setShowResult] = useState(true);
@@ -48,6 +48,7 @@ function Search({ className }) {
     const handleHideResults = () => {
         setShowResult(false);
     };
+    console.log(bgrInput);
 
     return (
         // Using a wrapper <div> or <span> tag around the reference element solves this by creating a new parentNode context.
@@ -67,10 +68,10 @@ function Search({ className }) {
                 )}
                 onClickOutside={handleHideResults}
             >
-                <div className={cx('search')}>
+                <div className={cx('search', { active: bgrInput })}>
                     <input
                         ref={inputRef}
-                        placeholder="Search..."
+                        placeholder={placeholder ? 'Tìm kiếm liên quan' : `Search...`}
                         spellCheck={false}
                         value={seachValue}
                         onChange={(e) => {

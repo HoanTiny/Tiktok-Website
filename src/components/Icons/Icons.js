@@ -426,13 +426,13 @@ export const EffectIcon = ({ width = '2.4rem', height = '2.4rem', className }) =
     </svg>
 );
 
-export const CloseIcon = ({ width = '6rem', height = '6rem', className }) => (
+export const CloseIcon = ({ width = '48px', height = '48px', className }) => (
     <svg
         width={width}
         data-e2e=""
         height={height}
         className={className}
-        viewBox="0 0 55 54"
+        viewBox="-10 -10 68 68"
         fill="currentColor"
         xmlns="http://www.w3.org/2000/svg"
     >
@@ -708,8 +708,15 @@ export const UnfollowIcon = ({ width = '2.4rem', height = '2.4rem', className })
         ></path>
     </svg>
 );
-export const MoreIcon = ({ width = '4.8rem', height = '4.8rem', className }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} className={className} fill="currentColor">
+export const MoreIcon = ({ width = '20px', height = '20px', className }) => (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={width}
+        height={height}
+        viewBox="-10 -10 68 68"
+        className={className}
+        fill="currentColor"
+    >
         <path d="M4 24a5 5 0 1 1 10 0 5 5 0 0 1-10 0m15 0a5 5 0 1 1 10 0 5 5 0 0 1-10 0m20-5a5 5 0 1 0 0 10 5 5 0 0 0 0-10"></path>
     </svg>
 );

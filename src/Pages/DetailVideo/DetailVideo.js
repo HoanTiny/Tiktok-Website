@@ -3,7 +3,7 @@ import style from './DetailVideo.module.scss';
 import getVideoService from 'src/services/getVideoService';
 
 import { useEffect, useState } from 'react';
-import { CloseIcon, MoreIcon, SearchIcon } from 'src/components/Icons';
+import { CloseIcon, MoreIcon } from 'src/components/Icons';
 import Search from 'src/layouts/components/Search';
 
 const cx = classNames.bind(style);
@@ -36,7 +36,9 @@ export default function DetailsVideo() {
         <div className={cx('wrapper')}>
             <div className={cx('video-container')}>
                 <header className={cx('video-container__header')}>
-                    <CloseIcon className={cx('icon-close')} />
+                    <div className={cx('icon-close')}>
+                        <CloseIcon width="40px" height="40px" />
+                    </div>
                     {/* <div className={cx('input-search')}>
                         <input type="text" placeholder="Tìm kiếm liên quan" />
                         <button>
@@ -44,8 +46,8 @@ export default function DetailsVideo() {
                         </button>
                     </div> */}
 
-                    <Search className={cx('input-search')} />
-                    <MoreIcon className={cx('icon-more')} />
+                    <Search className={cx('input-search')} bgrInput={true} placeholder={true} />
+                    <MoreIcon width="48px" height="48px" className={cx('icon-more')} />
                 </header>
                 {/* Sử dụng thuộc tính autoPlay để phát video tự động và controls để hiển thị các nút điều khiển */}
                 {video && (
