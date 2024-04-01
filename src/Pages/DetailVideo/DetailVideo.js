@@ -173,6 +173,11 @@ export default function DetailsVideo() {
                             <ShareIcon />
                         </div>
                     </div>
+
+                    <div className={cx('video-link')}>
+                        <span>{currentURL}</span>
+                        <button type="">Sao chép liên kết</button>
+                    </div>
                 </div>
             )}
         </div>
