@@ -1,0 +1,54 @@
+.video-user_comment {
+    display: flex;
+
+    flex: 0 0 auto;
+    background-color: rgb(255, 255, 255);
+    border-top: 1px solid rgba(22, 24, 35, 0.2);
+    // margin: 0px 30px;
+    padding: 21px 30px;
+    .comment-user__input {
+        position: relative;
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        align-items: center;
+        background-color: rgba(22, 24, 35, 0.06);
+        box-sizing: border-box;
+        border: 1px solid transparent;
+        border-radius: 8px;
+        padding: 0px 9px;
+        height: 40px;
+        flex: 1;
+        &.active {
+            border: 1px solid #ccc;
+        }
+        input {
+            background-color: transparent;
+            flex: 1 1 auto;
+            height: auto;
+        }
+
+        &-icon {
+            width: 22px;
+            height: 22px;
+            margin-right: 12px;
+            cursor: pointer;
+        }
+    }
+
+    .btn-submit {
+        color: rgba(22, 24, 35, 0.34);
+        font-weight: 600;
+        cursor: default;
+        flex: 0 0 48px;
+        font-size: 14px;
+        line-height: 39px;
+        text-align: right;
+        background-color: transparent;
+        flex: 0 0 48px;
+        &.active {
+            color: rgb(254, 44, 85);
+            cursor: pointer;
+        }
+    }
+}
