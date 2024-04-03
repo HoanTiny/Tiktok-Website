@@ -1,18 +1,24 @@
 import classNames from 'classnames/bind';
 import styles from './inputComment.module.scss';
-import { useState } from 'react';
+import { useState, forwardRef, useImperativeHandle, useRef } from 'react';
 import { EmojiIcon, TagCommentIcon } from '../Icons';
 
 const cx = classNames.bind(styles);
 
-function InputComment({ handleCreateComment }) {
+const InputComment = forwardRef(({ handleCreateComment }, ref) => {
     const [valueInput, setValueInput] = useState('');
     const [activeBtn, setActiveBtn] = useState(false);
     const [activeBtnCm, setActiveBtnCm] = useState(false);
-
+    const inputRef = useRef(null);
     // Set active button when the user wirte in input
+    useImperativeHandle(ref, () => ({
+        focusInput: () => {
+            console.log('test', inputRef);
+            // inputRef.current[index]?.current?.focus();
+            inputRef.current.focus();
+        },
+    }));
     function handleActiveBtn(e, index = null) {
-        console.log(e.target.value);
         setValueInput(e.target.value);
 
         if (e.target.value !== '') {
@@ -42,6 +48,7 @@ function InputComment({ handleCreateComment }) {
             <div className={cx('comment-user__input')}>
                 <input
                     placeholder="Thêm câu trả lời..."
+                    ref={inputRef}
                     value={valueInput}
                     onChange={(e) => {
                         handleActiveBtn(e);
@@ -59,5 +66,5 @@ function InputComment({ handleCreateComment }) {
             </button>
         </div>
     );
-}
+});
 export default InputComment;

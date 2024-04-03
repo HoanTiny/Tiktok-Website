@@ -40,18 +40,13 @@ export default function DetailsVideo() {
     const [video, setVideo] = useState({});
     const [comments, setComment] = useState({});
     const [value, setValue] = useState(0);
-    // const [activeReply, setActiveReply] = useState(false);
     const [activeReplyIndex, setActiveReplyIndex] = useState(null);
-    // const [moreComment, setMoreComment] = useState(false);
-    // const [activeBtn, setActiveBtn] = useState(false);
-    // const [activeBtnCm, setActiveBtnCm] = useState(false);
-    // const [valueInput, setValueInput] = useState('');
+
     const currentURL = window.location.href;
     const inputRefs = useRef([]);
     // Lấy đoạn cuối cùng của đường dẫn URL
     const pathSegments = currentURL.split('/');
     const videoId = pathSegments[pathSegments.length - 1];
-    console.log('Video ID:', videoId);
 
     useEffect(() => {
         getVideoService(videoId)
@@ -169,8 +164,6 @@ export default function DetailsVideo() {
             .replace('a year ago', 'một năm trước')
             .replace('years ago', 'năm trước');
 
-        console.log('Distance: ', vietnameseDistance);
-
         return vietnameseDistance;
     }
 
@@ -201,12 +194,21 @@ export default function DetailsVideo() {
     function replyComments(index) {
         // setActiveReply(true);
         setActiveReplyIndex(index);
-        console.log('index', index);
-        setTimeout(() => {
-            console.log('Reply', inputRefs.current);
-            inputRefs.current[index]?.current?.focus();
-        }, 100);
+
+        // setTimeout(() => {
+        //     console.log('Reply', inputRefs.current);
+        //     inputRefs.current[index]?.current?.focus();
+        // }, 100);
+        // setTimeout(() => {
+        //     inputRefs.current[index].focusInput();
+        // }, 100);
     }
+
+    useEffect(() => {
+        if (activeReplyIndex !== null) {
+            inputRefs.current[activeReplyIndex]?.focusInput();
+        }
+    }, [activeReplyIndex]);
 
     function closeComment() {
         setActiveReplyIndex(null);
@@ -285,7 +287,6 @@ export default function DetailsVideo() {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
-    console.log('Get date: ', video.user);
 
     return (
         <div className={cx('wrapper')}>
@@ -459,6 +460,7 @@ export default function DetailsVideo() {
                                                                   >
                                                                       <InputComment
                                                                           handleCreateComment={handleCreateComment}
+                                                                          ref={(el) => (inputRefs.current[index] = el)}
                                                                       />
                                                                       /
                                                                       {/* <div className={cx('comment-user__input')}>
@@ -640,6 +642,10 @@ export default function DetailsVideo() {
                                                       ))
                                                 // <div className={cx('no-comment')}>Chưa có bình luận nào</div>
                                             }
+
+                                            {comments.length === 0 && (
+                                                <div className={cx('no-comment')}>Hãy là người bình luận đầu tiên</div>
+                                            )}
                                         </div>
                                     </div>
                                 </CustomTabPanel>
