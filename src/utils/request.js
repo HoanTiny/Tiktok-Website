@@ -25,4 +25,9 @@ export const patch = async (path, data, options) => {
     return response;
 };
 
+export const del = async (path, options = {}) => {
+    const response = await request.delete(path, options);
+    return response.data;
+};
+
 export default request;

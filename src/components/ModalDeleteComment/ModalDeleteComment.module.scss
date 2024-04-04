@@ -1,0 +1,35 @@
+.modal-del-comment {
+    display: flex;
+    flex-direction: column;
+    line-height: 30px;
+    text-align: center;
+    width: 310px;
+    h2 {
+        margin: 0;
+        font-size: 24px;
+        padding: 28px 24px;
+    }
+    .modal-button {
+        display: flex;
+        flex-direction: column;
+
+        button {
+            background-color: transparent;
+            border: none;
+            background: none;
+            outline: none;
+            padding: 0px;
+            color: rgb(22, 24, 35);
+            font-weight: 600;
+            font-size: 14px;
+            height: 48px;
+            line-height: 48px;
+            cursor: pointer;
+            border-top: 1px solid rgba(22, 24, 35, 0.12);
+        }
+
+        .button-cancel {
+            color: rgba(22, 24, 35, 0.5);
+        }
+    }
+}

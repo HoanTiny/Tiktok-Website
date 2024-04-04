@@ -5,7 +5,7 @@ import { EmojiIcon, TagCommentIcon } from '../Icons';
 
 const cx = classNames.bind(styles);
 
-const InputComment = forwardRef(({ handleCreateComment }, ref) => {
+const InputComment = forwardRef(({ handleCreateComment, border = false }, ref) => {
     const [valueInput, setValueInput] = useState('');
     const [activeBtn, setActiveBtn] = useState(false);
     const [activeBtnCm, setActiveBtnCm] = useState(false);
@@ -44,7 +44,7 @@ const InputComment = forwardRef(({ handleCreateComment }, ref) => {
     };
 
     return (
-        <div className={cx('video-user_comment')}>
+        <div className={cx('video-user_comment', border ? 'border' : '')}>
             <div className={cx('comment-user__input')}>
                 <input
                     placeholder="Thêm câu trả lời..."

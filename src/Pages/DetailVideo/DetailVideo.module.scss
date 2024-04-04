@@ -398,10 +398,13 @@
                             flex-direction: column;
                             align-items: center;
                             // padding-top: 28px;
-
+                            position: relative;
                             .more-icon {
                                 visibility: hidden;
                                 cursor: pointer;
+                                &:hover + .popup-comment {
+                                    display: block;
+                                }
                             }
 
                             &:hover .more-icon {
@@ -420,6 +423,49 @@
                                 display: flex;
                                 -webkit-box-align: center;
                                 align-items: center;
+                            }
+
+                            .popup-comment {
+                                position: absolute;
+                                z-index: 2;
+                                background: rgb(255, 255, 255);
+                                border-radius: 8px;
+                                top: calc(100% + -58px);
+                                box-shadow: rgba(0, 0, 0, 0.12) 0px 4px 16px;
+                                transition: opacity 300ms ease 0s;
+                                opacity: 1;
+                                font-weight: 700;
+                                font-size: 16px;
+                                line-height: 21px;
+                                padding: 8px 16px;
+                                min-width: 200px;
+                                height: 60px;
+                                right: -6px;
+                                display: none;
+                                &:hover {
+                                    display: block;
+                                    button {
+                                        color: red;
+                                    }
+                                }
+                                button {
+                                    background-color: transparent;
+                                    display: flex;
+                                }
+                                &_item {
+                                    display: flex;
+                                    align-items: center;
+                                    height: 100%;
+
+                                    &:hover {
+                                        color: red;
+                                    }
+                                    p {
+                                        padding: 12px 8px;
+                                        margin-left: 12px;
+                                        cursor: pointer;
+                                    }
+                                }
                             }
                         }
                     }

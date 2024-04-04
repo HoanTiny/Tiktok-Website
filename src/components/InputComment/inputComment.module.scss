@@ -3,7 +3,9 @@
 
     flex: 0 0 auto;
     background-color: rgb(255, 255, 255);
-    border-top: 1px solid rgba(22, 24, 35, 0.2);
+    &.border {
+        border-top: 1px solid rgba(22, 24, 35, 0.2);
+    }
     // margin: 0px 30px;
     padding: 21px 30px;
     .comment-user__input {

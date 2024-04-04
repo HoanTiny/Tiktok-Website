@@ -11,8 +11,10 @@ import getVideoService from 'src/services/getVideoService';
 import getCommentListService from 'src/services/getCommentsService';
 import createComment from 'src/services/createCommentService';
 import { createRef, useEffect, useRef, useState } from 'react';
+import Popup from 'reactjs-popup';
 import moment from 'moment';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {
     // ArrowIcon,
     BookMarkIcon,
@@ -20,8 +22,10 @@ import {
     CommentIcon,
     // EmojiIcon,
     EnbedIcon,
+    FlagIcon,
     MoreIcon,
     MusicIcon,
+    Recycle,
     SendFriendIcon,
     ShareFBIcon,
     ShareIcon,
@@ -33,8 +37,29 @@ import {
 } from 'src/components/Icons';
 import Search from 'src/layouts/components/Search';
 import InputComment from 'src/components/InputComment';
+import { UserAuth } from 'src/components/store';
+import deleteComment from 'src/services/deleteCommentService';
+import ModalDeleteComment from 'src/components/ModalDeleteComment';
 
 const cx = classNames.bind(style);
+
+const StyledPopup = styled(Popup)`
+    // use your custom style for ".popup-overlay"
+    &-overlay {
+        background: rgba(0, 0, 0, 0.5);
+    }
+    // use your custom style for ".popup-content"
+    &-content {
+        border-radius: 8px;
+        transition: all 300ms cubic-bezier(0.075, 0.82, 0.165, 1) 0s;
+        transform: none;
+        margin: auto;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        background-color: rgb(255, 255, 255);
+    }
+`;
 
 export default function DetailsVideo() {
     const [video, setVideo] = useState({});
@@ -42,11 +67,19 @@ export default function DetailsVideo() {
     const [value, setValue] = useState(0);
     const [activeReplyIndex, setActiveReplyIndex] = useState(null);
 
+    const { userAuth } = UserAuth();
     const currentURL = window.location.href;
     const inputRefs = useRef([]);
     // Lấy đoạn cuối cùng của đường dẫn URL
     const pathSegments = currentURL.split('/');
     const videoId = pathSegments[pathSegments.length - 1];
+
+    const notifyComment = () => {
+        toast.success('Comment thành công !', {
+            position: 'top-center',
+            autoClose: 1000,
+        });
+    };
 
     useEffect(() => {
         getVideoService(videoId)
@@ -89,8 +122,22 @@ export default function DetailsVideo() {
             .then((res) => {
                 console.log('Comments: ', value);
                 setTimeout(() => {
+                    notifyComment();
                     setComment([...comments, res]);
                 }, 2000);
+            })
+            .catch((error) => {
+                console.log('error', error);
+            });
+    };
+
+    // Xóa comments
+    const handleDeletComments = (idComment) => {
+        deleteComment(idComment)
+            .then((comment) => {
+                console.log('comment', idComment);
+                const updatedComments = comments.filter((comment) => comment.id !== idComment);
+                setComment(updatedComments);
             })
             .catch((error) => {
                 console.log('error', error);
@@ -585,6 +632,37 @@ export default function DetailsVideo() {
                                                                       width="32px"
                                                                       height="32px"
                                                                   />
+
+                                                                  <div className={cx('popup-comment')}>
+                                                                      {comment.user.nickname === userAuth ? (
+                                                                          <div className={cx('popup-comment_item')}>
+                                                                              <StyledPopup
+                                                                                  trigger={
+                                                                                      <button>
+                                                                                          <Recycle />
+                                                                                          <p>Xóa</p>
+                                                                                      </button>
+                                                                                  }
+                                                                                  modal
+                                                                              >
+                                                                                  {(close) => (
+                                                                                      <ModalDeleteComment
+                                                                                          close={close}
+                                                                                          data={comment}
+                                                                                          handleDeletComments={
+                                                                                              handleDeletComments
+                                                                                          }
+                                                                                      />
+                                                                                  )}
+                                                                              </StyledPopup>
+                                                                          </div>
+                                                                      ) : (
+                                                                          <div className={cx('popup-comment_item')}>
+                                                                              <FlagIcon />
+                                                                              <p>Báo cáo</p>
+                                                                          </div>
+                                                                      )}
+                                                                  </div>
                                                                   <TymCommentIcon className={cx('tym-cm-icon')} />
                                                                   <p>28</p>
                                                               </div>
@@ -659,7 +737,8 @@ export default function DetailsVideo() {
                         </div>
                     </div>
 
-                    <InputComment handleCreateComment={handleCreateComment} />
+                    <InputComment handleCreateComment={handleCreateComment} border={true} />
+                    <ToastContainer />
                 </div>
             )}
         </div>
