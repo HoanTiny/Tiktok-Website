@@ -110,7 +110,7 @@
     }
 
     .detail-video-right {
-        width: 40%;
+        width: 544px;
         height: 100%;
         display: flex;
         flex-direction: column;
@@ -206,6 +206,7 @@
                         background-color: rgba(22, 24, 35, 0.06);
                         padding: 6px;
                         margin-right: 6px;
+                        cursor: pointer;
                     }
 
                     span {
@@ -541,6 +542,75 @@
                 &.active {
                     color: rgb(254, 44, 85);
                     cursor: pointer;
+                }
+            }
+        }
+
+        .video-list {
+            width: 100%;
+            overflow: hidden auto;
+            position: relative;
+            padding-inline-start: 7.5px;
+            flex-wrap: wrap;
+            display: flex;
+            padding-top: 20px;
+
+            &_item {
+                margin-right: 7.5px;
+                width: 160px;
+                height: 239px;
+                margin-bottom: 8px;
+                cursor: pointer;
+                position: relative;
+
+                &:nth-child(3n) {
+                    margin-right: 0;
+                }
+                // &:hover .video-list_item--video {
+                //     display: block;
+                // }
+                img {
+                    border-radius: 4px;
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    background: rgba(22, 24, 35, 0.06);
+                }
+
+                &--video {
+                    width: 100%;
+                    height: 100%;
+                    // display: none;
+                    position: absolute;
+                    left: 0px;
+                    top: 0px;
+                    video {
+                        border-radius: 4px;
+
+                        display: block;
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
+                }
+                &--count {
+                    position: absolute;
+                    height: 40px;
+                    left: 0px;
+                    right: 0px;
+                    bottom: 0px;
+                    background: linear-gradient(rgba(22, 24, 35, 0) 2.92%, rgba(22, 24, 35, 0.3) 98.99%);
+                    color: rgb(255, 255, 255);
+                    font-size: 13px;
+                    line-height: 17px;
+                    padding: 12px 8px 8px;
+                    display: flex;
+                    -webkit-box-align: center;
+                    align-items: center;
+
+                    span {
+                        margin-left: 8px;
+                    }
                 }
             }
         }

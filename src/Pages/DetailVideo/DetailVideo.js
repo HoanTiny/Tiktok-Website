@@ -16,21 +16,20 @@ import moment from 'moment';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {
-    // ArrowIcon,
     BookMarkIcon,
     CloseIcon,
     CommentIcon,
-    // EmojiIcon,
     EnbedIcon,
     FlagIcon,
     MoreIcon,
     MusicIcon,
+    PlayIconTranperant,
     Recycle,
     SendFriendIcon,
     ShareFBIcon,
     ShareIcon,
-    // TagCommentIcon,
     TwitterIcon,
+    TymActiveIcon,
     TymCommentIcon,
     TymIcon,
     WhatsAppIcon,
@@ -40,6 +39,11 @@ import InputComment from 'src/components/InputComment';
 import { UserAuth } from 'src/components/store';
 import deleteComment from 'src/services/deleteCommentService';
 import ModalDeleteComment from 'src/components/ModalDeleteComment';
+import likeVideoServirvice from 'src/services/likeVideoService';
+import unlikeVideoServirvice from 'src/services/unlikeVideoService';
+import unlikeCommentService from 'src/services/unLikeCommentService';
+import likeCommentService from 'src/services/likeCommentService';
+import getVideoUserService from 'src/services/getVideoUserService';
 
 const cx = classNames.bind(style);
 
@@ -66,7 +70,11 @@ export default function DetailsVideo() {
     const [comments, setComment] = useState({});
     const [value, setValue] = useState(0);
     const [activeReplyIndex, setActiveReplyIndex] = useState(null);
-
+    const [likeCount, setLikeCount] = useState(video.likes_count);
+    const [isLiked, setIsLiked] = useState(video.is_liked);
+    const [loading, setLoading] = useState(true);
+    const [isHovered, setIsHovered] = useState(false);
+    const [videoUsers, setVideoUser] = useState();
     const { userAuth } = UserAuth();
     const currentURL = window.location.href;
     const inputRefs = useRef([]);
@@ -81,32 +89,177 @@ export default function DetailsVideo() {
         });
     };
 
+    const notifyDelComment = () => {
+        toast.success('Xóa thành công !', {
+            position: 'top-center',
+            autoClose: 1000,
+        });
+    };
+
+    const StyledTabs = styled((props) => (
+        <Tabs {...props} TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }} />
+    ))({
+        borderBottom: '1px solid #e8e8e8',
+        padding: '0 32px',
+        marginTop: '16px',
+        '& .MuiTabs-indicator': {
+            display: 'flex',
+            justifyContent: 'center',
+            backgroundColor: '#1890ff',
+        },
+        '& .MuiTabs-indicatorSpan': {
+            // maxWidth: 40,
+            width: '100%',
+            backgroundColor: '#635ee7',
+        },
+    });
+
+    const StyledTab = styled((props) => <Tab disableRipple {...props} />)(({ theme }) => ({
+        textTransform: 'none',
+        fontWeight: theme.typography.fontWeightRegular,
+        fontSize: '16px',
+        marginRight: theme.spacing(1),
+        color: 'rgba(0, 0, 0, 0.7)',
+        '&.Mui-selected': {
+            color: '#000',
+            fontSize: '16px',
+            fontWeight: '700',
+        },
+        '&.Mui-focusVisible': {
+            backgroundColor: 'rgba(100, 95, 228, 0.32)',
+        },
+        '&:hover': {
+            color: '#000',
+            opacity: 1,
+        },
+        display: 'flex',
+        flex: 1,
+    }));
+
     useEffect(() => {
         getVideoService(videoId)
             .then((res) => {
                 setVideo(res);
-                console.log('Check video: ', video);
+                setLikeCount(res.likes_count);
+                // console.log('Check video: ', video);
             })
             .catch((error) => {
                 console.log('error', error);
             });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [videoId]); // Ensure that videoId is added to the dependency array
+    }, [videoId]);
 
-    // Lấy danh sách bình luận
     useEffect(() => {
-        getCommentListService(videoId)
+        const fetchData = async () => {
+            try {
+                setLoading(true); // Bắt đầu loading
+                const response = await getCommentListService(videoId);
+                setComment(response);
+                console.log('Comments: ', response);
+            } catch (error) {
+                console.log('error', error);
+            } finally {
+                setLoading(false); // Kết thúc loading
+            }
+        };
+        fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [videoId]);
+
+    // Yêu thích video
+    const handleLikeVideo = (id) => {
+        console.log(`id`, id);
+        if (video.is_liked) {
+            unlikeVideoServirvice(id)
+                .then((data) => {
+                    setIsLiked(false);
+                    setLikeCount(data.likes_count);
+                })
+                .catch((error) => {
+                    console.error('Error while fetching like video:', error);
+                });
+            return;
+        } else {
+            likeVideoServirvice(id)
+                .then((data) => {
+                    setIsLiked(true);
+                    setLikeCount(data.likes_count);
+                })
+                .catch((error) => {
+                    console.error('Error while fetching like video:', error);
+                });
+        }
+    };
+
+    useEffect(() => {
+        if (video.is_liked) {
+            setIsLiked(true);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [video.is_liked]);
+
+    // Get list video user
+    useEffect(() => {
+        console.log('Listing video', video);
+        getVideoUserService(userAuth)
             .then((res) => {
-                setTimeout(() => {
-                    setComment(res);
-                }, 500);
-                console.log('Check comment: ', res);
+                setVideoUser(res);
+                console.log('Video User: ', res);
             })
             .catch((error) => {
                 console.log('error', error);
             });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [videoId]); // Ensure that videoId is added to the dependency array
+    }, [userAuth]);
+
+    // Fuc update comment after user like comment
+
+    //Like comment
+    const handleLikeComment = (id) => {
+        comments.forEach((comment) => {
+            if (comment.id === id) {
+                if (comment.is_liked) {
+                    unlikeCommentService(id)
+                        .then((data) => {
+                            setComment((prevComments) => {
+                                return prevComments.map((comment) => {
+                                    if (comment.id === id) {
+                                        return {
+                                            ...comment,
+                                            is_liked: !comment.is_liked,
+                                            likes_count: data.likes_count,
+                                        };
+                                    }
+                                    return comment;
+                                });
+                            });
+                        })
+                        .catch((error) => {
+                            console.error('Error while fetching like video:', error);
+                        });
+                } else {
+                    likeCommentService(id)
+                        .then((data) => {
+                            setComment((prevComments) => {
+                                return prevComments.map((comment) => {
+                                    if (comment.id === id) {
+                                        return {
+                                            ...comment,
+                                            is_liked: !comment.is_liked,
+                                            likes_count: data.likes_count,
+                                        };
+                                    }
+                                    return comment;
+                                });
+                            });
+                        })
+                        .catch((error) => {
+                            console.error('Error while fetching like video:', error);
+                        });
+                }
+            }
+        });
+    };
 
     useEffect(() => {
         // Reset refs array
@@ -114,6 +267,7 @@ export default function DetailsVideo() {
             .fill()
             .map((_, i) => inputRefs.current[i] || createRef());
     }, [comments]);
+
     // Tạo bình luận
     const handleCreateComment = (value) => {
         // Thực hiện các thao tác cần thiết với giá trị valueInput
@@ -138,6 +292,7 @@ export default function DetailsVideo() {
                 console.log('comment', idComment);
                 const updatedComments = comments.filter((comment) => comment.id !== idComment);
                 setComment(updatedComments);
+                notifyDelComment();
             })
             .catch((error) => {
                 console.log('error', error);
@@ -265,46 +420,6 @@ export default function DetailsVideo() {
     //     setMoreComment(true);
     // }
 
-    const StyledTabs = styled((props) => (
-        <Tabs {...props} TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }} />
-    ))({
-        borderBottom: '1px solid #e8e8e8',
-        padding: '0 32px',
-        marginTop: '16px',
-        '& .MuiTabs-indicator': {
-            display: 'flex',
-            justifyContent: 'center',
-            backgroundColor: '#1890ff',
-        },
-        '& .MuiTabs-indicatorSpan': {
-            // maxWidth: 40,
-            width: '100%',
-            backgroundColor: '#635ee7',
-        },
-    });
-
-    const StyledTab = styled((props) => <Tab disableRipple {...props} />)(({ theme }) => ({
-        textTransform: 'none',
-        fontWeight: theme.typography.fontWeightRegular,
-        fontSize: '16px',
-        marginRight: theme.spacing(1),
-        color: 'rgba(0, 0, 0, 0.7)',
-        '&.Mui-selected': {
-            color: '#000',
-            fontSize: '16px',
-            fontWeight: '700',
-        },
-        '&.Mui-focusVisible': {
-            backgroundColor: 'rgba(100, 95, 228, 0.32)',
-        },
-        '&:hover': {
-            color: '#000',
-            opacity: 1,
-        },
-        display: 'flex',
-        flex: 1,
-    }));
-
     function CustomTabPanel(props) {
         const { children, value, index, ...other } = props;
 
@@ -410,10 +525,11 @@ export default function DetailsVideo() {
                         <div className={cx('video-irt')}>
                             <div className={cx('video-irt__main')}>
                                 <div className={cx('video-irt__main-like')}>
-                                    <div className={cx('irt-icon')}>
-                                        <TymIcon />
+                                    <div className={cx('irt-icon')} onClick={() => handleLikeVideo(video.uuid)}>
+                                        {video.is_liked}
+                                        {isLiked ? <TymActiveIcon /> : <TymIcon />}
                                     </div>
-                                    <div>{video.likes_count}</div>
+                                    <div>{likeCount}</div>
                                 </div>
                                 <div className={cx('video-irt__main-comment')}>
                                     <div className={cx('irt-icon')}>
@@ -466,51 +582,88 @@ export default function DetailsVideo() {
                                 <CustomTabPanel value={value} index={0}>
                                     <div className={cx('comment-container')}>
                                         <div className={cx('comment-container__list')}>
-                                            {
-                                                comments && comments.length > 0
-                                                    ? comments.map((comment, index) => (
-                                                          <div
-                                                              className={cx('comment-container__list-item')}
-                                                              key={index}
-                                                          >
-                                                              <img
-                                                                  className={cx('comment-container__list-item-avatar')}
-                                                                  alt="Ảnh đại diện của người dùng"
-                                                                  src={
-                                                                      comment.user.avatar ||
-                                                                      'Đường dẫn đến ảnh thay thế'
-                                                                  }
-                                                              />
-                                                              <div className={cx('comment-container__list-item-info')}>
-                                                                  <h4 className={cx('comment-username')}>
-                                                                      {comment.user.nickname}
-                                                                  </h4>
-                                                                  <p className={cx('comment-value')}>
-                                                                      {comment.comment}
-                                                                  </p>
-                                                                  <div className={cx('comment-irt')}>
-                                                                      <span className={cx('comment-irt__time')}>
-                                                                          {getDistanceTime(index)}
-                                                                      </span>
-                                                                      <span
-                                                                          className={cx('comment-irt__reply')}
-                                                                          onClick={() => replyComments(index)}
-                                                                      >
-                                                                          Trả lời
-                                                                      </span>
-                                                                  </div>
-                                                                  <div
-                                                                      className={cx(
-                                                                          'comment-user',
-                                                                          activeReplyIndex === index ? 'active' : '',
-                                                                      )}
-                                                                  >
-                                                                      <InputComment
-                                                                          handleCreateComment={handleCreateComment}
-                                                                          ref={(el) => (inputRefs.current[index] = el)}
-                                                                      />
-                                                                      /
-                                                                      {/* <div className={cx('comment-user__input')}>
+                                            {loading ? (
+                                                // Hiển thị skeleton khi đang tải dữ liệu
+                                                [...Array(5)].map((_, index) => (
+                                                    <div className={cx('comment-container__list-item')} key={index}>
+                                                        <div className={cx('comment-container__list-item-info')}>
+                                                            <h4 className={cx('comment-username')}>
+                                                                <Skeleton height={20} width={200} />
+                                                            </h4>
+                                                            <p className={cx('comment-value')}>
+                                                                <Skeleton count={3} />
+                                                            </p>
+                                                            <div className={cx('comment-irt')}>
+                                                                <span className={cx('comment-irt__time')}>
+                                                                    <Skeleton height={20} width={100} />
+                                                                </span>
+                                                                <span className={cx('comment-irt__reply')}>
+                                                                    <Skeleton height={20} width={100} />
+                                                                </span>
+                                                            </div>
+                                                            <div className={cx('comment-user')}>
+                                                                <div className={cx('comment-user__input')}>
+                                                                    <input placeholder="Thêm câu trả lời..." />
+                                                                    <Skeleton height={20} width={20} />
+                                                                    <Skeleton height={20} width={20} />
+                                                                </div>
+                                                                <button type="button" className={cx('btn-submit')}>
+                                                                    <Skeleton height={20} width={50} />
+                                                                </button>
+                                                                <div className={cx('close-icon')}>
+                                                                    <Skeleton height={20} width={20} />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div className={cx('comment-container__list-item-like')}>
+                                                            <MoreIcon
+                                                                className={cx('more-icon')}
+                                                                width="32px"
+                                                                height="32px"
+                                                            />
+                                                            <TymCommentIcon className={cx('tym-cm-icon')} />
+                                                            <p>
+                                                                <Skeleton height={20} width={20} />
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            ) : comments && comments.length > 0 ? (
+                                                comments.map((comment, index) => (
+                                                    <div className={cx('comment-container__list-item')} key={index}>
+                                                        <img
+                                                            className={cx('comment-container__list-item-avatar')}
+                                                            alt="Ảnh đại diện của người dùng"
+                                                            src={comment.user.avatar || 'Đường dẫn đến ảnh thay thế'}
+                                                        />
+                                                        <div className={cx('comment-container__list-item-info')}>
+                                                            <h4 className={cx('comment-username')}>
+                                                                {comment.user.nickname}
+                                                            </h4>
+                                                            <p className={cx('comment-value')}>{comment.comment}</p>
+                                                            <div className={cx('comment-irt')}>
+                                                                <span className={cx('comment-irt__time')}>
+                                                                    {getDistanceTime(index)}
+                                                                </span>
+                                                                <span
+                                                                    className={cx('comment-irt__reply')}
+                                                                    onClick={() => replyComments(index)}
+                                                                >
+                                                                    Trả lời
+                                                                </span>
+                                                            </div>
+                                                            <div
+                                                                className={cx(
+                                                                    'comment-user',
+                                                                    activeReplyIndex === index ? 'active' : '',
+                                                                )}
+                                                            >
+                                                                <InputComment
+                                                                    handleCreateComment={handleCreateComment}
+                                                                    ref={(el) => (inputRefs.current[index] = el)}
+                                                                />
+                                                                /
+                                                                {/* <div className={cx('comment-user__input')}>
                                                                           <input
                                                                               ref={inputRefs.current[index]}
                                                                               placeholder="Thêm câu trả lời..."
@@ -525,7 +678,7 @@ export default function DetailsVideo() {
                                                                               className={cx('comment-user__input-icon')}
                                                                           />
                                                                       </div> */}
-                                                                      {/* <button
+                                                                {/* <button
                                                                           type="button"
                                                                           className={cx(
                                                                               'btn-submit',
@@ -534,14 +687,14 @@ export default function DetailsVideo() {
                                                                       >
                                                                           Đăng
                                                                       </button> */}
-                                                                      <div
-                                                                          className={cx('close-icon')}
-                                                                          onClick={closeComment}
-                                                                      >
-                                                                          <CloseIcon width="20px" height="20px" />
-                                                                      </div>
-                                                                  </div>
-                                                                  {/* <div className={cx('comment-count')}>
+                                                                <div
+                                                                    className={cx('close-icon')}
+                                                                    onClick={closeComment}
+                                                                >
+                                                                    <CloseIcon width="20px" height="20px" />
+                                                                </div>
+                                                            </div>
+                                                            {/* <div className={cx('comment-count')}>
                                                                 <div
                                                                     className={cx(
                                                                         'comment-count__main',
@@ -625,103 +778,62 @@ export default function DetailsVideo() {
                                                                     <ArrowIcon width="10px" height="10px" />
                                                                 </p>
                                                             </div> */}
-                                                              </div>
-                                                              <div className={cx('comment-container__list-item-like')}>
-                                                                  <MoreIcon
-                                                                      className={cx('more-icon')}
-                                                                      width="32px"
-                                                                      height="32px"
-                                                                  />
+                                                        </div>
+                                                        <div className={cx('comment-container__list-item-like')}>
+                                                            <MoreIcon
+                                                                className={cx('more-icon')}
+                                                                width="32px"
+                                                                height="32px"
+                                                            />
 
-                                                                  <div className={cx('popup-comment')}>
-                                                                      {comment.user.nickname === userAuth ? (
-                                                                          <div className={cx('popup-comment_item')}>
-                                                                              <StyledPopup
-                                                                                  trigger={
-                                                                                      <button>
-                                                                                          <Recycle />
-                                                                                          <p>Xóa</p>
-                                                                                      </button>
-                                                                                  }
-                                                                                  modal
-                                                                              >
-                                                                                  {(close) => (
-                                                                                      <ModalDeleteComment
-                                                                                          close={close}
-                                                                                          data={comment}
-                                                                                          handleDeletComments={
-                                                                                              handleDeletComments
-                                                                                          }
-                                                                                      />
-                                                                                  )}
-                                                                              </StyledPopup>
-                                                                          </div>
-                                                                      ) : (
-                                                                          <div className={cx('popup-comment_item')}>
-                                                                              <FlagIcon />
-                                                                              <p>Báo cáo</p>
-                                                                          </div>
-                                                                      )}
-                                                                  </div>
-                                                                  <TymCommentIcon className={cx('tym-cm-icon')} />
-                                                                  <p>28</p>
-                                                              </div>
-                                                          </div>
-                                                      ))
-                                                    : [...Array(5)].map((_, index) => (
-                                                          <div
-                                                              className={cx('comment-container__list-item')}
-                                                              key={index}
-                                                          >
-                                                              <div className={cx('comment-container__list-item-info')}>
-                                                                  <h4 className={cx('comment-username')}>
-                                                                      <Skeleton height={20} width={200} />
-                                                                  </h4>
-                                                                  <p className={cx('comment-value')}>
-                                                                      <Skeleton count={3} />
-                                                                  </p>
-                                                                  <div className={cx('comment-irt')}>
-                                                                      <span className={cx('comment-irt__time')}>
-                                                                          <Skeleton height={20} width={100} />
-                                                                      </span>
-                                                                      <span className={cx('comment-irt__reply')}>
-                                                                          <Skeleton height={20} width={100} />
-                                                                      </span>
-                                                                  </div>
-                                                                  <div className={cx('comment-user')}>
-                                                                      <div className={cx('comment-user__input')}>
-                                                                          <input placeholder="Thêm câu trả lời..." />
-                                                                          <Skeleton height={20} width={20} />
-                                                                          <Skeleton height={20} width={20} />
-                                                                      </div>
-                                                                      <button
-                                                                          type="button"
-                                                                          className={cx('btn-submit')}
-                                                                      >
-                                                                          <Skeleton height={20} width={50} />
-                                                                      </button>
-                                                                      <div className={cx('close-icon')}>
-                                                                          <Skeleton height={20} width={20} />
-                                                                      </div>
-                                                                  </div>
-                                                              </div>
-                                                              <div className={cx('comment-container__list-item-like')}>
-                                                                  <MoreIcon
-                                                                      className={cx('more-icon')}
-                                                                      width="32px"
-                                                                      height="32px"
-                                                                  />
-                                                                  <TymCommentIcon className={cx('tym-cm-icon')} />
-                                                                  <p>
-                                                                      <Skeleton height={20} width={20} />
-                                                                  </p>
-                                                              </div>
-                                                          </div>
-                                                      ))
-                                                // <div className={cx('no-comment')}>Chưa có bình luận nào</div>
-                                            }
-
-                                            {comments.length === 0 && (
+                                                            <div className={cx('popup-comment')}>
+                                                                {comment.user.nickname === userAuth ? (
+                                                                    <div className={cx('popup-comment_item')}>
+                                                                        <StyledPopup
+                                                                            trigger={
+                                                                                <button>
+                                                                                    <Recycle />
+                                                                                    <p>Xóa</p>
+                                                                                </button>
+                                                                            }
+                                                                            modal
+                                                                        >
+                                                                            {(close) => (
+                                                                                <ModalDeleteComment
+                                                                                    close={close}
+                                                                                    data={comment}
+                                                                                    handleDeletComments={
+                                                                                        handleDeletComments
+                                                                                    }
+                                                                                />
+                                                                            )}
+                                                                        </StyledPopup>
+                                                                    </div>
+                                                                ) : (
+                                                                    <div className={cx('popup-comment_item')}>
+                                                                        <FlagIcon />
+                                                                        <p>Báo cáo</p>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                            {comment.is_liked ? (
+                                                                <div onClick={() => handleLikeComment(comment.id)}>
+                                                                    <TymActiveIcon
+                                                                        width="20"
+                                                                        height="20"
+                                                                        className={cx('tym-cm-icon')}
+                                                                    />
+                                                                </div>
+                                                            ) : (
+                                                                <div onClick={() => handleLikeComment(comment.id)}>
+                                                                    <TymCommentIcon className={cx('tym-cm-icon')} />
+                                                                </div>
+                                                            )}
+                                                            <p>{comment.likes_count}</p>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            ) : (
                                                 <div className={cx('no-comment')}>Hãy là người bình luận đầu tiên</div>
                                             )}
                                         </div>
@@ -729,8 +841,28 @@ export default function DetailsVideo() {
                                 </CustomTabPanel>
 
                                 <CustomTabPanel value={value} index={1}>
-                                    <div className={cx('video-list')}>
-                                        <h2>Nhà sáng tạo</h2>
+                                    <div
+                                        className={cx('video-list')}
+                                        onMouseEnter={() => setIsHovered(true)}
+                                        onMouseLeave={() => setIsHovered(false)}
+                                    >
+                                        {videoUsers &&
+                                            videoUsers.videos.map((item, index) => (
+                                                <div className={cx('video-list_item')} key={index}>
+                                                    <img src={item.thumb_url} alt="Thumb" />
+                                                    {isHovered && (
+                                                        <div className={cx('video-list_item--video')}>
+                                                            <video>
+                                                                <source src={item.file_url} type="video/mp4" />
+                                                            </video>
+                                                        </div>
+                                                    )}
+                                                    <div className={cx('video-list_item--count')}>
+                                                        <PlayIconTranperant />
+                                                        <span>99K</span>
+                                                    </div>
+                                                </div>
+                                            ))}
                                     </div>
                                 </CustomTabPanel>
                             </Box>

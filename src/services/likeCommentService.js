@@ -1,11 +1,11 @@
 import * as request from 'src/utils/request';
 
-async function unlikeVideoServirvice(idvideo) {
+async function likeCommentService(idcomment) {
     try {
         const token = localStorage.getItem('token');
 
         const res = await request.post(
-            'videos/' + idvideo + '/unlike',
+            'comments/' + idcomment + '/like',
             {},
             {
                 // Change the API endpoint here
@@ -14,11 +14,11 @@ async function unlikeVideoServirvice(idvideo) {
                 },
             },
         );
-        console.log('success Un Like Video: ', res);
+        console.log('Like Comment Success: ', res);
         return res.data;
     } catch (error) {
         console.log(`error`, error);
     }
 }
 
-export default unlikeVideoServirvice;
+export default likeCommentService;
