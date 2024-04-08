@@ -73,11 +73,49 @@ export default function DetailsVideo() {
     const [likeCount, setLikeCount] = useState(video.likes_count);
     const [isLiked, setIsLiked] = useState(video.is_liked);
     const [loading, setLoading] = useState(true);
-    const [isHovered, setIsHovered] = useState(false);
+    const [currentHoveredVideoId, setCurrentHoveredVideoId] = useState(null);
     const [videoUsers, setVideoUser] = useState();
+    const [hideComment, setHideComment] = useState(false);
+    const [sliderValue, setSliderValue] = useState(0);
+    const [totalTime, setTotalTime] = useState(null);
+    const [currentTime, setCurrentTime] = useState(0);
     const { userAuth } = UserAuth();
     const currentURL = window.location.href;
     const inputRefs = useRef([]);
+    const videoRef = useRef();
+
+    const handleLoadedMetadata = () => {
+        const duration = videoRef.current.duration;
+        console.log(`Loading metadata`, duration);
+        setTotalTime(duration);
+    };
+
+    const handleTimeUpdate = () => {
+        const currentTime = videoRef.current.currentTime;
+        const progress = (currentTime / videoRef.current.duration) * 100;
+        setCurrentTime(Math.floor(videoRef.current.currentTime));
+        // setSliderValue((videoRef.current.currentTime / totalTime) * 100);
+        console.log(`totalTime`, totalTime);
+        setSliderValue(progress);
+    };
+
+    const handleSliderChange = (event) => {
+        const tempSliderValue = event.target.value;
+        setSliderValue(tempSliderValue);
+
+        const time = (tempSliderValue / 100) * videoRef.current.duration;
+        videoRef.current.currentTime = time;
+
+        const progress = (tempSliderValue / 100) * 100;
+        event.target.style.background = `linear-gradient(to right, #fff ${progress}%, rgba(255, 255, 255, 0.34) ${progress}%)`;
+    };
+
+    const formatTime = (currentTime) => {
+        console.log('currentTime', currentTime);
+        const minutes = Math.floor(currentTime / 60);
+        const seconds = Math.floor(currentTime % 60);
+        return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+    };
     // Lấy đoạn cuối cùng của đường dẫn URL
     const pathSegments = currentURL.split('/');
     const videoId = pathSegments[pathSegments.length - 1];
@@ -200,17 +238,20 @@ export default function DetailsVideo() {
 
     // Get list video user
     useEffect(() => {
-        console.log('Listing video', video);
-        getVideoUserService(userAuth)
-            .then((res) => {
-                setVideoUser(res);
-                console.log('Video User: ', res);
-            })
-            .catch((error) => {
-                console.log('error', error);
-            });
+        // console.log('Listing video', video);
+        if (video.user && video.user.nickname) {
+            // Kiểm tra xem video.user và video.user.nickname có tồn tại hay không
+            getVideoUserService(video.user.nickname)
+                .then((res) => {
+                    setVideoUser(res);
+                    console.log('Video User: ', res);
+                })
+                .catch((error) => {
+                    console.log('error', error);
+                });
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [userAuth]);
+    }, [video.user]);
 
     // Fuc update comment after user like comment
 
@@ -271,7 +312,7 @@ export default function DetailsVideo() {
     // Tạo bình luận
     const handleCreateComment = (value) => {
         // Thực hiện các thao tác cần thiết với giá trị valueInput
-        console.log('Comments: ', value);
+        // console.log('Comments: ', value);
         createComment(videoId, value)
             .then((res) => {
                 console.log('Comments: ', value);
@@ -297,6 +338,15 @@ export default function DetailsVideo() {
             .catch((error) => {
                 console.log('error', error);
             });
+    };
+
+    // Handle hover video
+    const handleHoverVideo = (idVideo) => {
+        setCurrentHoveredVideoId(idVideo);
+    };
+
+    const handleLeaveHoverVideo = () => {
+        setCurrentHoveredVideoId();
     };
 
     const urlVideo = video.file_url;
@@ -479,9 +529,30 @@ export default function DetailsVideo() {
                         </div>
                         <div className={cx('video-container_img')}>
                             <div className={cx('video-container_img--video')}>
-                                <video controls autoPlay src={urlVideo}>
+                                <video
+                                    autoPlay
+                                    src={urlVideo}
+                                    ref={videoRef}
+                                    onLoadedMetadata={handleLoadedMetadata}
+                                    onTimeUpdate={handleTimeUpdate}
+                                >
                                     <source src={urlVideo} type="video/mp4" />
                                 </video>
+                                <div className={cx('range')}>
+                                    <input
+                                        type="range"
+                                        min="0"
+                                        max="100"
+                                        value={sliderValue}
+                                        onChange={handleSliderChange}
+                                        style={{
+                                            background: `linear-gradient(to right, #fff ${sliderValue}%, rgba(255, 255, 255, 0.34) ${sliderValue}%)`,
+                                        }}
+                                    />
+                                    <div className={cx('value')}>
+                                        {formatTime(currentTime)}/{formatTime(totalTime)}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </>
@@ -576,8 +647,15 @@ export default function DetailsVideo() {
                                     aria-label="styled scrollable auto tabs example"
                                     centered
                                 >
-                                    <StyledTab label={`Bình Luận (${comments.length})`} />
-                                    <StyledTab label="Video của nhà sáng tạo" iconPosition="start" />
+                                    <StyledTab
+                                        label={`Bình Luận (${comments.length})`}
+                                        onClick={() => setHideComment(false)}
+                                    />
+                                    <StyledTab
+                                        label="Video của nhà sáng tạo"
+                                        iconPosition="start"
+                                        onClick={() => setHideComment(true)}
+                                    />
                                 </StyledTabs>
                                 <CustomTabPanel value={value} index={0}>
                                     <div className={cx('comment-container')}>
@@ -841,18 +919,22 @@ export default function DetailsVideo() {
                                 </CustomTabPanel>
 
                                 <CustomTabPanel value={value} index={1}>
-                                    <div
-                                        className={cx('video-list')}
-                                        onMouseEnter={() => setIsHovered(true)}
-                                        onMouseLeave={() => setIsHovered(false)}
-                                    >
+                                    <div className={cx('video-list')}>
                                         {videoUsers &&
                                             videoUsers.videos.map((item, index) => (
-                                                <div className={cx('video-list_item')} key={index}>
+                                                <div
+                                                    className={cx('video-list_item')}
+                                                    onMouseEnter={
+                                                        () => handleHoverVideo(item.id)
+                                                        // setIsHovered(true)
+                                                    }
+                                                    onMouseLeave={() => handleLeaveHoverVideo(null)}
+                                                    key={index}
+                                                >
                                                     <img src={item.thumb_url} alt="Thumb" />
-                                                    {isHovered && (
+                                                    {currentHoveredVideoId === item.id && (
                                                         <div className={cx('video-list_item--video')}>
-                                                            <video>
+                                                            <video autoPlay muted>
                                                                 <source src={item.file_url} type="video/mp4" />
                                                             </video>
                                                         </div>
@@ -869,7 +951,7 @@ export default function DetailsVideo() {
                         </div>
                     </div>
 
-                    <InputComment handleCreateComment={handleCreateComment} border={true} />
+                    {!hideComment && <InputComment handleCreateComment={handleCreateComment} border={true} />}
                     <ToastContainer />
                 </div>
             )}
