@@ -23,6 +23,7 @@ import {
     FlagIcon,
     MoreIcon,
     MusicIcon,
+    // PlayIconFill,
     PlayIconTranperant,
     Recycle,
     SendFriendIcon,
@@ -44,6 +45,8 @@ import unlikeVideoServirvice from 'src/services/unlikeVideoService';
 import unlikeCommentService from 'src/services/unLikeCommentService';
 import likeCommentService from 'src/services/likeCommentService';
 import getVideoUserService from 'src/services/getVideoUserService';
+import VideoPlayer from 'src/components/VideoPlayer/VideoPlayer';
+import { Link } from 'react-router-dom';
 
 const cx = classNames.bind(style);
 
@@ -76,46 +79,12 @@ export default function DetailsVideo() {
     const [currentHoveredVideoId, setCurrentHoveredVideoId] = useState(null);
     const [videoUsers, setVideoUser] = useState();
     const [hideComment, setHideComment] = useState(false);
-    const [sliderValue, setSliderValue] = useState(0);
-    const [totalTime, setTotalTime] = useState(null);
-    const [currentTime, setCurrentTime] = useState(0);
+
     const { userAuth } = UserAuth();
     const currentURL = window.location.href;
     const inputRefs = useRef([]);
-    const videoRef = useRef();
+    // const videoRef = useRef();
 
-    const handleLoadedMetadata = () => {
-        const duration = videoRef.current.duration;
-        console.log(`Loading metadata`, duration);
-        setTotalTime(duration);
-    };
-
-    const handleTimeUpdate = () => {
-        const currentTime = videoRef.current.currentTime;
-        const progress = (currentTime / videoRef.current.duration) * 100;
-        setCurrentTime(Math.floor(videoRef.current.currentTime));
-        // setSliderValue((videoRef.current.currentTime / totalTime) * 100);
-        console.log(`totalTime`, totalTime);
-        setSliderValue(progress);
-    };
-
-    const handleSliderChange = (event) => {
-        const tempSliderValue = event.target.value;
-        setSliderValue(tempSliderValue);
-
-        const time = (tempSliderValue / 100) * videoRef.current.duration;
-        videoRef.current.currentTime = time;
-
-        const progress = (tempSliderValue / 100) * 100;
-        event.target.style.background = `linear-gradient(to right, #fff ${progress}%, rgba(255, 255, 255, 0.34) ${progress}%)`;
-    };
-
-    const formatTime = (currentTime) => {
-        console.log('currentTime', currentTime);
-        const minutes = Math.floor(currentTime / 60);
-        const seconds = Math.floor(currentTime % 60);
-        return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
-    };
     // Lấy đoạn cuối cùng của đường dẫn URL
     const pathSegments = currentURL.split('/');
     const videoId = pathSegments[pathSegments.length - 1];
@@ -528,13 +497,14 @@ export default function DetailsVideo() {
                             </span>
                         </div>
                         <div className={cx('video-container_img')}>
-                            <div className={cx('video-container_img--video')}>
+                            {/* <div className={cx('video-container_img--video')}>
                                 <video
                                     autoPlay
                                     src={urlVideo}
                                     ref={videoRef}
                                     onLoadedMetadata={handleLoadedMetadata}
                                     onTimeUpdate={handleTimeUpdate}
+                                    onClick={togglePlay}
                                 >
                                     <source src={urlVideo} type="video/mp4" />
                                 </video>
@@ -553,7 +523,14 @@ export default function DetailsVideo() {
                                         {formatTime(currentTime)}/{formatTime(totalTime)}
                                     </div>
                                 </div>
-                            </div>
+                                {!isPlaying && (
+                                    <div className={cx('play-icon-fill')}>
+                                        <PlayIconFill width={50} height={50} />
+                                    </div>
+                                )}
+                            </div> */}
+
+                            <VideoPlayer urlVideo={urlVideo} />
                         </div>
                     </>
                 )}
@@ -922,7 +899,8 @@ export default function DetailsVideo() {
                                     <div className={cx('video-list')}>
                                         {videoUsers &&
                                             videoUsers.videos.map((item, index) => (
-                                                <div
+                                                <Link
+                                                    to={`/@${item.user.nickname}/video/${item.uuid}`}
                                                     className={cx('video-list_item')}
                                                     onMouseEnter={
                                                         () => handleHoverVideo(item.id)
@@ -943,7 +921,7 @@ export default function DetailsVideo() {
                                                         <PlayIconTranperant />
                                                         <span>99K</span>
                                                     </div>
-                                                </div>
+                                                </Link>
                                             ))}
                                     </div>
                                 </CustomTabPanel>
