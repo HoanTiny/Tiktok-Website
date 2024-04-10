@@ -360,9 +360,9 @@ function Video({ data, isMuted, toggleAllVideosMute, volume, onVolumeChange }) {
                                     <strong>{likeCount}</strong>
                                 </button>
                                 <button className={cx('btn-iterac')}>
-                                    <span className={cx('btn-icon')}>
+                                    <Link to={`/@${data.user.nickname}/video/${data.uuid}`} className={cx('btn-icon')}>
                                         <CommentIcon />
-                                    </span>
+                                    </Link>
                                     <strong>{data.comments_count}</strong>
                                 </button>
                                 <button className={cx('btn-iterac')}>

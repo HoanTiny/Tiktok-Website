@@ -25,6 +25,7 @@ import {
     MusicIcon,
     // PlayIconFill,
     PlayIconTranperant,
+    PlayingVideoIcon,
     Recycle,
     SendFriendIcon,
     ShareFBIcon,
@@ -932,6 +933,14 @@ export default function DetailsVideo() {
                                                         <PlayIconTranperant />
                                                         <span>99K</span>
                                                     </div>
+                                                    {videoId === item.uuid && (
+                                                        <div className={cx('video-playing')}>
+                                                            <div className={cx('video-playing_icon')}>
+                                                                <PlayingVideoIcon />
+                                                            </div>
+                                                            <span>Hiện đang phát</span>
+                                                        </div>
+                                                    )}
                                                 </Link>
                                             ))}
                                     </div>

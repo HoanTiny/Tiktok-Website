@@ -616,6 +616,26 @@
                         margin-left: 8px;
                     }
                 }
+
+                .video-playing {
+                    background: rgba(0, 0, 0, 0.2);
+                    backdrop-filter: blur(15px);
+                    display: flex;
+                    -webkit-box-align: center;
+                    align-items: center;
+                    -webkit-box-pack: center;
+                    justify-content: center;
+                    position: absolute;
+                    inset: 0px;
+                    flex-direction: column;
+
+                    span {
+                        margin-top: 4px;
+                        font-size: 13px;
+                        line-height: 17px;
+                        color: rgb(255, 255, 255);
+                    }
+                }
             }
         }
     }
