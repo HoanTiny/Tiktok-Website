@@ -47,6 +47,8 @@ import likeCommentService from 'src/services/likeCommentService';
 import getVideoUserService from 'src/services/getVideoUserService';
 import VideoPlayer from 'src/components/VideoPlayer/VideoPlayer';
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleNotch } from '@fortawesome/free-solid-svg-icons';
 
 const cx = classNames.bind(style);
 
@@ -76,6 +78,7 @@ export default function DetailsVideo() {
     const [likeCount, setLikeCount] = useState(video.likes_count);
     const [isLiked, setIsLiked] = useState(video.is_liked);
     const [loading, setLoading] = useState(true);
+    const [loadingLink, setLoadingLink] = useState(false);
     const [currentHoveredVideoId, setCurrentHoveredVideoId] = useState(null);
     const [videoUsers, setVideoUser] = useState();
     const [hideComment, setHideComment] = useState(false);
@@ -157,6 +160,7 @@ export default function DetailsVideo() {
     }, [videoId]);
 
     useEffect(() => {
+        setLoadingLink(false);
         const fetchData = async () => {
             try {
                 setLoading(true); // Bắt đầu loading
@@ -318,6 +322,10 @@ export default function DetailsVideo() {
         setCurrentHoveredVideoId();
     };
 
+    const handleClickClose = () => {
+        window.history.back(); // Quay lại trang trước đó trong lịch sử trình duyệt
+    };
+
     const urlVideo = video.file_url;
 
     function getDate(dateInput) {
@@ -439,6 +447,11 @@ export default function DetailsVideo() {
     //     setMoreComment(true);
     // }
 
+    const handleLoad = () => {
+        console.log('Load more video');
+        setLoadingLink(true);
+    };
+
     function CustomTabPanel(props) {
         const { children, value, index, ...other } = props;
 
@@ -473,7 +486,7 @@ export default function DetailsVideo() {
         <div className={cx('wrapper')}>
             <div className={cx('video-container')}>
                 <header className={cx('video-container__header')}>
-                    <div className={cx('icon-close')}>
+                    <div className={cx('icon-close')} onClick={handleClickClose}>
                         <CloseIcon width="40px" height="40px" />
                     </div>
 
@@ -902,12 +915,10 @@ export default function DetailsVideo() {
                                                 <Link
                                                     to={`/@${item.user.nickname}/video/${item.uuid}`}
                                                     className={cx('video-list_item')}
-                                                    onMouseEnter={
-                                                        () => handleHoverVideo(item.id)
-                                                        // setIsHovered(true)
-                                                    }
+                                                    onMouseEnter={() => handleHoverVideo(item.id)}
                                                     onMouseLeave={() => handleLeaveHoverVideo(null)}
                                                     key={index}
+                                                    onClick={handleLoad}
                                                 >
                                                     <img src={item.thumb_url} alt="Thumb" />
                                                     {currentHoveredVideoId === item.id && (
@@ -930,6 +941,7 @@ export default function DetailsVideo() {
                     </div>
 
                     {!hideComment && <InputComment handleCreateComment={handleCreateComment} border={true} />}
+                    {loadingLink && <FontAwesomeIcon icon={faCircleNotch} className={cx('loadingvideo')} />}
                     <ToastContainer />
                 </div>
             )}
