@@ -80,7 +80,7 @@ export default function DetailsVideo() {
     const [isLiked, setIsLiked] = useState(video.is_liked);
     const [loading, setLoading] = useState(true);
     const [loadingLink, setLoadingLink] = useState(false);
-    const [currentHoveredVideoId, setCurrentHoveredVideoId] = useState(null);
+    // const [currentHoveredVideoId, setCurrentHoveredVideoId] = useState(null);
     const [videoUsers, setVideoUser] = useState();
     const [hideComment, setHideComment] = useState(false);
 
@@ -315,12 +315,25 @@ export default function DetailsVideo() {
     };
 
     // Handle hover video
+    const videoRefs = useRef({}); // Mảng refs để lưu trữ tham chiếu đến video
+    const hoveredVideoId = useRef(null);
     const handleHoverVideo = (idVideo) => {
-        setCurrentHoveredVideoId(idVideo);
+        hoveredVideoId.current = idVideo;
+        // Play video khi hover vào
+        if (videoRefs.current[idVideo]) {
+            console.log('hoveredVideoId.current', hoveredVideoId.current);
+            videoRefs.current[idVideo].play();
+        }
     };
 
-    const handleLeaveHoverVideo = () => {
-        setCurrentHoveredVideoId();
+    const handleLeaveHoverVideo = (idVideo) => {
+        hoveredVideoId.current = null;
+
+        // Pause video khi hover ra
+        if (videoRefs.current[idVideo]) {
+            videoRefs.current[idVideo].pause();
+            videoRefs.current[idVideo].load(); // Load lại video để quay trở lại thumb
+        }
     };
 
     const handleClickClose = () => {
@@ -917,18 +930,27 @@ export default function DetailsVideo() {
                                                     to={`/@${item.user.nickname}/video/${item.uuid}`}
                                                     className={cx('video-list_item')}
                                                     onMouseEnter={() => handleHoverVideo(item.id)}
-                                                    onMouseLeave={() => handleLeaveHoverVideo(null)}
+                                                    onMouseLeave={() => handleLeaveHoverVideo(item.id)}
                                                     key={index}
                                                     onClick={handleLoad}
                                                 >
-                                                    <img src={item.thumb_url} alt="Thumb" />
-                                                    {currentHoveredVideoId === item.id && (
-                                                        <div className={cx('video-list_item--video')}>
-                                                            <video autoPlay muted>
-                                                                <source src={item.file_url} type="video/mp4" />
-                                                            </video>
-                                                        </div>
+                                                    {hoveredVideoId.current !== item.id && (
+                                                        <img
+                                                            src={item.thumb_url}
+                                                            alt={item.id + hoveredVideoId.current}
+                                                        />
                                                     )}
+
+                                                    <div className={cx('video-list_item--video')}>
+                                                        <video
+                                                            ref={(ref) => {
+                                                                videoRefs.current[item.id] = ref; // Gán tham chiếu của video vào videoRefs.current
+                                                            }}
+                                                            muted
+                                                        >
+                                                            <source src={item.file_url} type="video/mp4" />
+                                                        </video>
+                                                    </div>
                                                     <div className={cx('video-list_item--count')}>
                                                         <PlayIconTranperant />
                                                         <span>99K</span>
@@ -942,6 +964,7 @@ export default function DetailsVideo() {
                                                         </div>
                                                     )}
                                                 </Link>
+                                                // <VideoListUser key={index} item={item} title={false} />
                                             ))}
                                     </div>
                                 </CustomTabPanel>

@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind';
 import * as React from 'react';
-import { useRef, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './Profile.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
@@ -13,7 +13,7 @@ import { styled } from '@mui/material/styles';
 import LockIcon from '@mui/icons-material/Lock';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
-import { CounterViewIcon, LockIconVideoLiked, ShareProfileIcon, UnfollowIcon } from 'src/components/Icons';
+import { LockIconVideoLiked, ShareProfileIcon, UnfollowIcon } from 'src/components/Icons';
 import getAnUserService from '~/services/getAnUserService';
 import Popup from 'reactjs-popup';
 import ModalEditProfile from '../../components/ModalEditProfile';
@@ -24,6 +24,7 @@ import followService from 'src/services/followUserService';
 import { useLocation } from 'react-router-dom';
 import 'react-loading-skeleton/dist/skeleton.css';
 import Skeleton from 'react-loading-skeleton';
+import VideoListUser from 'src/components/VideoListUser/VideoListUser';
 const cx = classNames.bind(styles);
 
 const StyledPopup = styled(Popup)`
@@ -107,7 +108,9 @@ function Profile() {
     const [dataProfile, setDataProfile] = useState(null); // Khởi tạo dataProfile với giá trị ban đầu là null
     const [isFollow, setIsFollow] = useState(null);
     const [pathname, setPathname] = useState(location.pathname);
-    const videoRef = useRef(null);
+    // const [currentHoveredVideoId, setCurrentHoveredVideoId] = useState(null);
+    // const [hoveredVideoId, setHoveredVideoId] = useState(null);
+    // const videoRefs = useRef([]);
     const url = new URL(window.location.href);
     // Tách chuỗi theo dấu "/"
     const match = url.pathname.match(/@([^/]+)/);
@@ -115,8 +118,6 @@ function Profile() {
     const nickname = match ? match[1] : null;
 
     const { userAuth } = UserAuth();
-    console.log(`userAuth`, userAuth);
-    console.log(`location`, location.pathname, nickname);
 
     useEffect(() => {
         // Update state pathname mỗi khi location.pathname thay đổi
@@ -129,6 +130,7 @@ function Profile() {
             .then((data) => {
                 setTimeout(() => {
                     setDataProfile(data);
+                    console.log('data 123', data);
                     setIsFollow(data.is_followed);
                 }, 2000);
             })
@@ -139,19 +141,6 @@ function Profile() {
     }, [pathname]);
 
     console.log(`dataProfile`, dataProfile);
-
-    const handleMouseEnter = () => {
-        if (videoRef.current) {
-            console.log('videoRef', videoRef.current);
-            videoRef.current.play();
-        }
-    };
-
-    const handleMouseLeave = () => {
-        if (videoRef.current) {
-            videoRef.current.pause();
-        }
-    };
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -287,40 +276,6 @@ function Profile() {
                         <StyledTab icon={<LockIcon />} label="Yêu thích" iconPosition="start" />
                         <StyledTab icon={<LockIcon />} label="Đã thích" iconPosition="start" />
                     </StyledTabs>
-                    {/* <CustomTabPanel value={value} index={0}>
-                        <div className={cx('video-list')}>
-                            {dataProfile &&
-                                dataProfile.videos.map((item, index) => (
-                                    <a href="https://www.w3schools.com" key={index}>
-                                        <div className={cx('video-parent')}>
-                                            <div className={cx('video-parent_container')}>
-                                                <div className={cx('video-list_item')}>
-                                                    <video
-                                                        ref={videoRef}
-                                                        className={cx('video-list_item-video')}
-                                                        onMouseEnter={handleMouseEnter}
-                                                        onMouseLeave={handleMouseLeave}
-                                                        loop
-                                                        muted
-                                                    >
-                                                        <source src={item.file_url} type="video/mp4" />
-                                                    </video>
-                                                </div>
-                                            </div>
-                                            <div className={cx('video-view')}>
-                                                <CounterViewIcon className={cx('video-view_icon')} />
-                                                <span className={cx('video-view_number')}>{item.views_count}</span>
-                                            </div>
-                                        </div>
-                                        <div className={cx('video-list_title')}>
-                                            <span className={cx('video-title')}>{item.description}</span>
-                                        </div>
-                                    </a>
-                                ))}
-
-                            
-                        </div>
-                    </CustomTabPanel> */}
 
                     <CustomTabPanel value={value} index={0}>
                         <div className={cx('video-list')}>
@@ -332,33 +287,7 @@ function Profile() {
                                       </div>
                                   ))
                                 : // Hiển thị danh sách video khi dữ liệu đã được tải
-                                  dataProfile.videos.map((item, index) => (
-                                      <a href="https://www.w3schools.com" key={index}>
-                                          <div className={cx('video-parent')}>
-                                              <div className={cx('video-parent_container')}>
-                                                  <div className={cx('video-list_item')}>
-                                                      <video
-                                                          ref={videoRef}
-                                                          className={cx('video-list_item-video')}
-                                                          onMouseEnter={handleMouseEnter}
-                                                          onMouseLeave={handleMouseLeave}
-                                                          loop
-                                                          muted
-                                                      >
-                                                          <source src={item.file_url} type="video/mp4" />
-                                                      </video>
-                                                  </div>
-                                              </div>
-                                              <div className={cx('video-view')}>
-                                                  <CounterViewIcon className={cx('video-view_icon')} />
-                                                  <span className={cx('video-view_number')}>{item.views_count}</span>
-                                              </div>
-                                          </div>
-                                          <div className={cx('video-list_title')}>
-                                              <span className={cx('video-title')}>{item.description}</span>
-                                          </div>
-                                      </a>
-                                  ))}
+                                  dataProfile.videos.map((item, index) => <VideoListUser key={index} item={item} />)}
                         </div>
                     </CustomTabPanel>
                     <CustomTabPanel value={value} index={1}>
