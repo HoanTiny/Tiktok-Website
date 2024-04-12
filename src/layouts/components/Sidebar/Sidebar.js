@@ -111,12 +111,14 @@ function Sidebar() {
                     icon={<HomeIcon />}
                     activeIcon={<HomeActiveIcon />}
                 ></MenuItem>
-                <MenuItem
-                    title="Following"
-                    to={config.routes.following}
-                    icon={<UserGroupIcon />}
-                    activeIcon={<UserGroupActiveIcon />}
-                ></MenuItem>
+                {token && (
+                    <MenuItem
+                        title="Following"
+                        to={config.routes.following}
+                        icon={<UserGroupIcon />}
+                        activeIcon={<UserGroupActiveIcon />}
+                    ></MenuItem>
+                )}
                 <MenuItem
                     title="Live"
                     to={config.routes.live}

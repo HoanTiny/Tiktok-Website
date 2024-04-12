@@ -23,10 +23,33 @@ import unlikeVideoServirvice from '~/services/unlikeVideoService';
 import unFollowService from 'src/services/unFollowService';
 import followService from 'src/services/followUserService';
 import { Link } from 'react-router-dom';
-
+import { UserAuth } from 'src/components/store';
+import Popup from 'reactjs-popup';
+import styled from 'styled-components';
+import ModalLogin from '../ModalLogin';
 const cx = classNames.bind(styles);
 
-function Video({ data, isMuted, toggleAllVideosMute, volume, onVolumeChange }) {
+const StyledPopup = styled(Popup)`
+    // use your custom style for ".popup-overlay"
+    &-overlay {
+        background: rgba(0, 0, 0, 0.5);
+    }
+    // use your custom style for ".popup-content"
+    &-content {
+        width: 483px;
+        border-radius: 8px;
+        transition: all 300ms cubic-bezier(0.075, 0.82, 0.165, 1) 0s;
+        transform: none;
+        margin: auto;
+        position: relative;
+        height: 642px;
+        overflow: hidden;
+        display: flex;
+        background-color: rgb(255, 255, 255);
+    }
+`;
+
+function Video({ data, isMuted, toggleAllVideosMute, volume, onVolumeChange, followbtn = true }) {
     const [playing, setPlaying] = useState(false);
 
     const [currentTime, setCurrentTime] = useState(0);
@@ -39,7 +62,7 @@ function Video({ data, isMuted, toggleAllVideosMute, volume, onVolumeChange }) {
     // Add a state to track if the video is in the viewport
     const [inViewport, setInViewport] = useState(false);
     const [isFollow, setIsFollow] = useState(data.user.is_followed);
-
+    const { tokenStr } = UserAuth();
     useEffect(() => {
         const options = {
             root: null,
@@ -102,26 +125,28 @@ function Video({ data, isMuted, toggleAllVideosMute, volume, onVolumeChange }) {
     };
 
     const handleFollowUser = (id) => {
-        if (isFollow) {
-            unFollowService(id)
-                .then((data) => {
-                    setIsFollow(false);
-                    console.log('unfollow', data);
-                })
-                .catch((error) => {
-                    console.error('Error while fetching follow user:', error);
-                });
-            return;
-        } else {
-            followService(id)
-                .then((data) => {
-                    setIsFollow(true);
-                    console.log('follow', data);
-                })
-                .catch((error) => {
-                    console.error('Error while fetching follow user:', error);
-                });
-            return;
+        if (tokenStr) {
+            if (isFollow) {
+                unFollowService(id)
+                    .then((data) => {
+                        setIsFollow(false);
+                        console.log('unfollow', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error while fetching follow user:', error);
+                    });
+                return;
+            } else {
+                followService(id)
+                    .then((data) => {
+                        setIsFollow(true);
+                        console.log('follow', data);
+                    })
+                    .catch((error) => {
+                        console.error('Error while fetching follow user:', error);
+                    });
+                return;
+            }
         }
     };
 
@@ -262,26 +287,44 @@ function Video({ data, isMuted, toggleAllVideosMute, volume, onVolumeChange }) {
                                         <span className={cx('name-music')}>Âm nhạc video</span>
                                     </div>
                                 </div>
-                                {isFollow ? (
-                                    <Button
-                                        outline
-                                        className={cx('unfollow-btn')}
-                                        onClick={() => {
-                                            handleFollowUser(data.user_id);
-                                        }}
-                                    >
-                                        UnFollow
-                                    </Button>
+                                {followbtn ? (
+                                    tokenStr ? (
+                                        isFollow ? (
+                                            <Button
+                                                outline
+                                                className={cx('unfollow-btn')}
+                                                onClick={() => {
+                                                    handleFollowUser(data.user_id);
+                                                }}
+                                            >
+                                                UnFollow
+                                            </Button>
+                                        ) : (
+                                            <Button
+                                                outline
+                                                className={cx('follow-btn')}
+                                                onClick={() => {
+                                                    handleFollowUser(data.user_id);
+                                                }}
+                                            >
+                                                Follow
+                                            </Button>
+                                        )
+                                    ) : (
+                                        <StyledPopup
+                                            trigger={
+                                                <Button outline className={cx('follow-btn')}>
+                                                    Follow
+                                                </Button>
+                                            }
+                                            modal
+                                            nested
+                                        >
+                                            {(close) => <ModalLogin close={close} />}
+                                        </StyledPopup>
+                                    )
                                 ) : (
-                                    <Button
-                                        outline
-                                        className={cx('follow-btn')}
-                                        onClick={() => {
-                                            handleFollowUser(data.user_id);
-                                        }}
-                                    >
-                                        Follow
-                                    </Button>
+                                    ''
                                 )}
                                 {/* <Button outline className={cx('follow-btn')} onClick={handleFollowUser(data.user_id)}>
                                     Follow
@@ -291,18 +334,41 @@ function Video({ data, isMuted, toggleAllVideosMute, volume, onVolumeChange }) {
 
                         <div className={cx('video-wrapper')}>
                             <div className={cx('video-container')}>
-                                <Link to={`/@${data.user.nickname}/video/${data.uuid}`}>
-                                    <video
-                                        className={cx('video')}
-                                        width="100%"
-                                        height="100%"
-                                        // controls
-                                        ref={videoRef}
-                                        onEnded={handleVideoEnd}
+                                {tokenStr ? (
+                                    <Link to={`/@${data.user.nickname}/video/${data.uuid}`}>
+                                        <video
+                                            className={cx('video')}
+                                            width="100%"
+                                            height="100%"
+                                            // controls
+                                            ref={videoRef}
+                                            onEnded={handleVideoEnd}
+                                        >
+                                            <source src={data.file_url} type="video/mp4" />
+                                        </video>
+                                    </Link>
+                                ) : (
+                                    <StyledPopup
+                                        trigger={
+                                            <div>
+                                                <video
+                                                    className={cx('video')}
+                                                    width="100%"
+                                                    height="100%"
+                                                    // controls
+                                                    ref={videoRef}
+                                                    onEnded={handleVideoEnd}
+                                                >
+                                                    <source src={data.file_url} type="video/mp4" />
+                                                </video>
+                                            </div>
+                                        }
+                                        modal
+                                        nested
                                     >
-                                        <source src={data.file_url} type="video/mp4" />
-                                    </video>
-                                </Link>
+                                        {(close) => <ModalLogin close={close} />}
+                                    </StyledPopup>
+                                )}
 
                                 <div className={cx('controls-video')}>
                                     <div className={cx('play-icon')} onClick={toggleVideo}>
@@ -350,27 +416,88 @@ function Video({ data, isMuted, toggleAllVideosMute, volume, onVolumeChange }) {
                             </div>
 
                             <div className={cx('video-interac')}>
-                                <button
-                                    className={cx('btn-iterac')}
-                                    onClick={() => {
-                                        handleLikeVideo(data.uuid);
-                                    }}
-                                >
-                                    <span className={cx('btn-icon')}>{isLiked ? <TymActiveIcon /> : <TymIcon />}</span>
-                                    <strong>{likeCount}</strong>
-                                </button>
-                                <button className={cx('btn-iterac')}>
-                                    <Link to={`/@${data.user.nickname}/video/${data.uuid}`} className={cx('btn-icon')}>
-                                        <CommentIcon />
-                                    </Link>
-                                    <strong>{data.comments_count}</strong>
-                                </button>
-                                <button className={cx('btn-iterac')}>
-                                    <span className={cx('btn-icon')}>
-                                        <BookMarkIcon />
-                                    </span>
-                                    <strong>0</strong>
-                                </button>
+                                {tokenStr ? (
+                                    <button
+                                        className={cx('btn-iterac')}
+                                        onClick={() => {
+                                            handleLikeVideo(data.uuid);
+                                        }}
+                                    >
+                                        <span className={cx('btn-icon')}>
+                                            {isLiked ? <TymActiveIcon /> : <TymIcon />}
+                                        </span>
+                                        <strong>{likeCount}</strong>
+                                    </button>
+                                ) : (
+                                    <StyledPopup
+                                        trigger={
+                                            <button
+                                                className={cx('btn-iterac')}
+                                                onClick={() => {
+                                                    handleLikeVideo(data.uuid);
+                                                }}
+                                            >
+                                                <span className={cx('btn-icon')}>
+                                                    {isLiked ? <TymActiveIcon /> : <TymIcon />}
+                                                </span>
+                                                <strong>{likeCount}</strong>
+                                            </button>
+                                        }
+                                        modal
+                                        nested
+                                    >
+                                        {(close) => <ModalLogin close={close} />}
+                                    </StyledPopup>
+                                )}
+                                {tokenStr ? (
+                                    <button className={cx('btn-iterac')}>
+                                        <Link
+                                            to={`/@${data.user.nickname}/video/${data.uuid}`}
+                                            className={cx('btn-icon')}
+                                        >
+                                            <CommentIcon />
+                                        </Link>
+                                        <strong>{data.comments_count}</strong>
+                                    </button>
+                                ) : (
+                                    <StyledPopup
+                                        trigger={
+                                            <button className={cx('btn-iterac')}>
+                                                <div className={cx('btn-icon')}>
+                                                    <CommentIcon />
+                                                </div>
+                                                <strong>{data.comments_count}</strong>
+                                            </button>
+                                        }
+                                        modal
+                                        nested
+                                    >
+                                        {(close) => <ModalLogin close={close} />}
+                                    </StyledPopup>
+                                )}
+                                {tokenStr ? (
+                                    <button className={cx('btn-iterac')}>
+                                        <span className={cx('btn-icon')}>
+                                            <BookMarkIcon />
+                                        </span>
+                                        <strong>0</strong>
+                                    </button>
+                                ) : (
+                                    <StyledPopup
+                                        trigger={
+                                            <button className={cx('btn-iterac')}>
+                                                <span className={cx('btn-icon')}>
+                                                    <BookMarkIcon />
+                                                </span>
+                                                <strong>0</strong>
+                                            </button>
+                                        }
+                                        modal
+                                        nested
+                                    >
+                                        {(close) => <ModalLogin close={close} />}
+                                    </StyledPopup>
+                                )}
                                 <button className={cx('btn-iterac')}>
                                     <Tippy
                                         interactive

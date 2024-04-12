@@ -1,0 +1,77 @@
+.wrapper {
+    position: relative;
+    margin: 0px auto;
+    width: 100%;
+    min-width: 420px;
+    flex-shrink: 1;
+    display: flex;
+    -webkit-box-pack: start;
+    justify-content: flex-start;
+    flex-direction: column;
+    -webkit-box-align: center;
+    align-items: center;
+    padding: 20px 0;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.inner {
+    display: flex;
+    width: 100%;
+}
+
+.avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+}
+
+.main-container {
+    width: 624px;
+    margin-left: 12px;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-nickname {
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 24px;
+    display: inline-block;
+    margin-right: 4px;
+}
+
+.header-iconcheck {
+    color: #20d5ec;
+}
+
+.header-fullname {
+    font-size: 14px;
+    display: inline-block;
+    line-height: 28px;
+}
+
+.header_content-music {
+    line-height: 21px;
+    margin-top: 2px;
+    margin-left: 2px;
+    font-weight: 400;
+    font-size: 14px;
+}
+
+.name-music {
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+    margin-left: 4px;
+
+    -webkit-box-orient: vertical;
+}
+
+.follow-btn {
+    width: 64px;
+    height: 36px;
+}
