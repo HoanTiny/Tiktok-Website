@@ -1104,7 +1104,7 @@ export const TiktokLogo = ({ width = '20', height = '20', className }) => (
         xmlns="http://www.w3.org/2000/svg"
         data-tt="Icons_TikTokLogo_svg"
     >
-        <g clip-path="url(#clip0_212_6970)" data-tt="Icons_TikTokLogo_g">
+        <g clipPath="url(#clip0_212_6970)" data-tt="Icons_TikTokLogo_g">
             <path
                 d="M9.87537 16.842V15.7233C9.49211 15.6721 9.10246 15.6401 8.70003 15.6401C3.90288 15.6338 0 19.5399 0 24.3475C0 27.2947 1.46917 29.9031 3.71764 31.4822C2.26763 29.9287 1.37974 27.8381 1.37974 25.5494C1.37974 20.8121 5.17403 16.9507 9.87537 16.842Z"
                 fill="#25F4EE"
@@ -1220,14 +1220,14 @@ export const FeedbackIcon = ({ width = '20', height = '20', className }) => (
         className={className}
     >
         <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
+            fillRule="evenodd"
+            clipRule="evenodd"
             d="M24.12 16.06c-.9 0-1.74.59-2.3 1.86-.1.25-.38.4-.64.31l-2.85-.95a.48.48 0 01-.3-.63c.9-2.28 2.86-4.59 6.09-4.59 3.33 0 6.02 2.7 6.02 6.03 0 1.94-1.18 3.54-2.4 4.56a7.76 7.76 0 01-4.13 1.78.47.47 0 01-.5-.48v-3c0-.27.23-.5.5-.56a4.07 4.07 0 001.57-.82c.74-.61.96-1.2.96-1.48 0-1.12-.9-2.03-2.02-2.03z"
         ></path>
         <path d="M26 28.06a2 2 0 11-4 0 2 2 0 014 0z"></path>
         <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
+            fillRule="evenodd"
+            clipRule="evenodd"
             d="M4 9.25C4 6.9 5.9 5 8.25 5h31.5C42.1 5 44 6.9 44 9.25v23.63c0 2.34-1.9 4.24-4.25 4.24H14.7l-7.29 7.3A2 2 0 014 43V9.25zm4 28.92l4.46-4.46a2 2 0 011.41-.59h25.88c.14 0 .25-.1.25-.24V9.25a.25.25 0 00-.25-.25H8.25a.25.25 0 00-.25.25v28.92z"
         ></path>
     </svg>
@@ -1244,5 +1244,80 @@ export const PostIcon = ({ width = '20', height = '20', className }) => (
         className={className}
     >
         <path d="M6 10a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H6Zm0 12a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H6ZM5 35a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-2Zm11-25a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h26a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H16Zm0 12a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h26a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1H16Zm-1 13a1 1 0 0 1 1-1h26a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H16a1 1 0 0 1-1-1v-2Z"></path>
+    </svg>
+);
+
+export const DropdownIconNoFillActive = ({ width = '20', height = '20', className }) => (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+        width={width}
+        height={height}
+        className={className}
+        data-tt="Icons_MiniArrowUpIcon_svg"
+    >
+        <g transform="matrix(1.4285714285714286,0,0,1.4285714285714286,0,0)" data-tt="Icons_MiniArrowUpIcon_g">
+            <path
+                d="M.5,10.15,6.65,4a.48.48,0,0,1,.7,0l6.15,6.15"
+                fill="none"
+                stroke="rgba(22, 24, 35, 1)"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                data-tt="Icons_MiniArrowUpIcon_path"
+            ></path>
+        </g>
+    </svg>
+);
+
+export const DropdownIconNoFill = ({ width = '20', height = '20', className }) => (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+        width={width}
+        height={height}
+        className={className}
+        data-tt="Icons_MiniArrowDownIcon_svg"
+    >
+        <g transform="matrix(1.4285714285714286,0,0,1.4285714285714286,0,0)" data-tt="Icons_MiniArrowDownIcon_g">
+            <path
+                d="M.5,3.85,6.65,10a.48.48,0,0,0,.7,0L13.5,3.85"
+                fill="none"
+                stroke="rgba(22, 24, 35, 1)"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                data-tt="Icons_MiniArrowDownIcon_path"
+            ></path>
+        </g>
+    </svg>
+);
+
+export const UploadVideoIcon = ({ width = '20', height = '20', className }) => (
+    <svg
+        fill="currentColor"
+        viewBox="0 0 48 48"
+        xmlns="http://www.w3.org/2000/svg"
+        width={width}
+        height={height}
+        className={className}
+    >
+        <path d="M25.84 37h8.66a9.5 9.5 0 0 0 1.35-18.9A12 12 0 0 0 12 20v.01A8.5 8.5 0 0 0 12.5 37h10.34V25.6l-1.72 1.74a1 1 0 0 1-1.42 0l-.7-.7a1 1 0 0 1 0-1.41l4.4-4.4c.68-.76 1.22-.77 2 .08l4.28 4.32a1 1 0 0 1 0 1.4l-.7.72a1 1 0 0 1-1.42 0l-1.72-1.75V37Z"></path>
+    </svg>
+);
+
+export const ImgThumbIcon = ({ width = '20', height = '20', className }) => (
+    <svg
+        width={width}
+        height={height}
+        className={className}
+        viewBox="0 0 33 33"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+    >
+        <path
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M24.9514 4.16669H8.04861C7.34577 4.16667 6.73938 4.16665 6.23997 4.20745C5.71284 4.25052 5.18855 4.34561 4.68404 4.60266C3.93139 4.98616 3.31947 5.59808 2.93598 6.35073C2.67892 6.85523 2.58383 7.37953 2.54076 7.90665C2.49996 8.40607 2.49998 9.0124 2.5 9.71524V23.2847C2.49998 23.9876 2.49996 24.594 2.54076 25.0934C2.58383 25.6205 2.67892 26.1448 2.93598 26.6493C3.31947 27.402 3.93139 28.0139 4.68404 28.3974C5.18855 28.6544 5.71284 28.7495 6.23997 28.7926C6.73939 28.8334 7.34573 28.8334 8.04858 28.8334H24.9514C25.6543 28.8334 26.2606 28.8334 26.76 28.7926C27.2872 28.7495 27.8115 28.6544 28.316 28.3974C29.0686 28.0139 29.6805 27.402 30.064 26.6493C30.3211 26.1448 30.4162 25.6205 30.4592 25.0934C30.5 24.594 30.5 23.9876 30.5 23.2848V9.71527C30.5 9.01242 30.5 8.40608 30.4592 7.90665C30.4162 7.37953 30.3211 6.85523 30.064 6.35073C29.6805 5.59808 29.0686 4.98616 28.316 4.60266C27.8115 4.34561 27.2872 4.25052 26.76 4.20745C26.2606 4.16665 25.6542 4.16667 24.9514 4.16669ZM5.16667 20.0252V23.2334C5.16667 24.0021 5.16771 24.4985 5.19857 24.8762C5.22817 25.2385 5.2784 25.3728 5.312 25.4387C5.43983 25.6896 5.6438 25.8935 5.89468 26.0214C5.96061 26.055 6.0949 26.1052 6.45712 26.1348C6.8349 26.1657 7.33127 26.1667 8.1 26.1667H21.2265L12.2781 16.7983C11.2473 15.7191 9.53152 15.6959 8.47192 16.7469L5.16667 20.0252ZM18.5 12.8334C18.5 10.9924 19.9924 9.50002 21.8333 9.50002C23.6743 9.50002 25.1667 10.9924 25.1667 12.8334C25.1667 14.6743 23.6743 16.1667 21.8333 16.1667C19.9924 16.1667 18.5 14.6743 18.5 12.8334Z"
+            fill="white"
+        ></path>
     </svg>
 );
