@@ -25,8 +25,32 @@ const cx = classNames.bind(style);
 function Upload() {
     const [showSubmenu, setShowSubmenu] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
+    const [thumb, setThumb] = useState(false);
     const videoRef = useRef(null);
     const inputRef = useRef(null);
+    const canvasRef = useRef(null);
+
+    useEffect(() => {
+        if (thumb) {
+            handleCaptureThumbnail(10); // Capture thumbnail at 10 seconds
+        }
+    }, [thumb]); // Call handleCaptureThumbnail whenever thumb changes
+
+    const handleCaptureThumbnail = (timeInSeconds) => {
+        const video = videoRef.current;
+        const canvas = canvasRef.current;
+
+        if (video && canvas) {
+            video.currentTime = timeInSeconds;
+
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        }
+    };
+
+    const handleThumbClick = () => {
+        setThumb(!thumb);
+    };
 
     // Hàm xử lý sự kiện click trên phần tử "Phân tích"
     const handlePhanTichClick = () => {
@@ -42,6 +66,11 @@ function Upload() {
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         setSelectedFile(file);
+    };
+
+    // Hàm xử lý khi người dùng hủy video
+    const handleCancelVideo = () => {
+        setSelectedFile(null);
     };
 
     // Sử dụng useEffect để cập nhật src của video khi selectedFile thay đổi
@@ -218,87 +247,113 @@ function Upload() {
                                     <h3>Ảnh bìa</h3>
 
                                     <div className={cx('thumb-upload')}>
-                                        <div className={cx('thumb-upload_btn')}>
-                                            <ImgThumbIcon width={28} height={24} />
-                                            <span>Sửa ảnh bìa</span>
-                                            <input type="file" />
-                                        </div>
-                                        <div className={cx('thumb-upload_img')}>
-                                            <img src="" alt="" />
-                                        </div>
+                                        {!thumb ? (
+                                            <div onClick={handleThumbClick} className={cx('thumb-upload_btn')}>
+                                                <ImgThumbIcon width={28} height={24} />
+                                                <span>Sửa ảnh bìa</span>
+                                                <input type="file" />
+                                            </div>
+                                        ) : (
+                                            <div onClick={handleThumbClick} className={cx('thumb-upload_btn')}>
+                                                <canvas
+                                                    ref={canvasRef}
+                                                    style={{ width: '100%', height: '100%' }}
+                                                ></canvas>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
 
                                 <div className={cx('tag')}>
                                     <h3>Ai có thể xem video này</h3>
-                                    {/* Options select */}
-                                    <select>
+                                    <select className={cx('form-select')} aria-label="Default select example">
                                         <option value="1">Tất cả mọi người</option>
-                                        <option value="2">Bạn bè</option>
+                                        <option value="2" className={cx('option-friend')}>
+                                            <p>Bạn bè</p>
+                                        </option>
                                         <option value="3">Chỉ mình bạn</option>
                                     </select>
+                                    {/* Options select */}
                                 </div>
 
                                 {/* Tag cho phép người dùng  */}
 
                                 <div className={cx('allow-user')}>
-                                    <div>
-                                        <input type="checkbox" name="allow-user" id="allow-user" />
-                                        <label htmlFor="allow-user">Bình luận</label>
+                                    <div className={cx('allow-user-item')}>
+                                        <input type="checkbox" name="allow-user" />
+                                        <label htmlFor="allow-user-item">Bình luận</label>
                                     </div>
-                                    <div>
+                                    <div className={cx('allow-user-item')}>
                                         <input type="checkbox" name="allow-duet" id="allow-duet" />
                                         <label htmlFor="allow-duet">Duet</label>
                                     </div>
-                                    <div>
+                                    <div className={cx('allow-user-item')}>
                                         <input type="checkbox" name="allow-connect" id="allow-connect" />
                                         <label htmlFor="allow-connect">Ghép nối</label>
                                     </div>
                                 </div>
 
                                 <div className={cx('upload-after_footer')}>
-                                    <Button primary>Đăng</Button>
-                                    <button>Hủy bỏ</button>
+                                    <Button outline className={cx('btn-cancel')}>
+                                        Hủy bỏ
+                                    </Button>
+                                    <Button primary className={cx('btn-sub')}>
+                                        Đăng
+                                    </Button>
                                 </div>
                             </div>
                         </div>
 
                         <div className={cx('upload-right')}>
                             <div className={cx('main-upload')}>
-                                <div className={cx('main-upload_video')}>
-                                    <UploadVideoIcon width={48} height={48} className={cx('upload-video_icon')} />
-                                    <div className={cx('select-title')}>
-                                        <span>Chọn video để tải lên</span>
-                                    </div>
-                                    <div className={cx('draw-title')}>
-                                        <span>Kéo và thả tập tin</span>
-                                    </div>
-                                    <div className={cx('box-text')}>
-                                        <p>Hỗ trợ định dạng video mp4, avi, webm và mov</p>
-                                        <p>Độ phân giải 720x1280 trở lên</p>
-                                        <p>Tối đa 10 phut</p>
-                                        <p>Nhỏ hơn 10GB</p>
-                                        <p>Dưới 30 video</p>
-                                    </div>
-
-                                    <Button primary className={cx('btn-upload-video')} onClick={handleChooseFile}>
-                                        Chọn tập tin
-                                    </Button>
-                                    {/* Input ẩn cho phép người dùng chọn tập tin */}
-                                    <input
-                                        ref={inputRef}
-                                        type="file"
-                                        style={{ display: 'none' }}
-                                        onChange={handleFileChange}
-                                    />
+                                <div>
                                     {/* Hiển thị tên của tập tin đã chọn nếu có */}
-                                    {selectedFile && (
-                                        <div>
+                                    {selectedFile ? (
+                                        <div className={cx('main-upload_video', 'video')}>
                                             <video controls ref={videoRef} width="320" height="240">
                                                 <source src="" type="video/mp4" />
                                                 Your browser does not support the video tag.
                                             </video>
-                                            <p>Tệp đã chọn: {selectedFile.name}</p>
+                                            {/* <p>Tệp đã chọn: {selectedFile.name}</p> */}
+                                            <Button onClick={handleCancelVideo} className={cx('btn-cancel-video')}>
+                                                Hủy
+                                            </Button>
+                                        </div>
+                                    ) : (
+                                        <div className={cx('main-upload_video')}>
+                                            <UploadVideoIcon
+                                                width={48}
+                                                height={48}
+                                                className={cx('upload-video_icon')}
+                                            />
+                                            <div className={cx('select-title')}>
+                                                <span>Chọn video để tải lên</span>
+                                            </div>
+                                            <div className={cx('draw-title')}>
+                                                <span>Kéo và thả tập tin</span>
+                                            </div>
+                                            <div className={cx('box-text')}>
+                                                <p>Hỗ trợ định dạng video mp4, avi, webm và mov</p>
+                                                <p>Độ phân giải 720x1280 trở lên</p>
+                                                <p>Tối đa 10 phut</p>
+                                                <p>Nhỏ hơn 10GB</p>
+                                                <p>Dưới 30 video</p>
+                                            </div>
+
+                                            <Button
+                                                primary
+                                                className={cx('btn-upload-video')}
+                                                onClick={handleChooseFile}
+                                            >
+                                                Chọn tập tin
+                                            </Button>
+                                            {/* Input ẩn cho phép người dùng chọn tập tin */}
+                                            <input
+                                                ref={inputRef}
+                                                type="file"
+                                                style={{ display: 'none' }}
+                                                onChange={handleFileChange}
+                                            />
                                         </div>
                                     )}
                                 </div>

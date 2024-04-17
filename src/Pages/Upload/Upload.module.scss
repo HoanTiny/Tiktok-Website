@@ -258,18 +258,20 @@
                 gap: 12px;
 
                 .upload-left {
+                    flex: 1;
                     .upload-after_header {
-                        margin-left: -5px;
                         margin-bottom: 24px;
 
                         h3 {
                             margin: 0;
+                            font-weight: 700;
                         }
                     }
 
                     .upload-after_des {
                         display: flex;
                         flex-direction: column;
+                        margin-bottom: 24px;
 
                         .des-header {
                             display: flex;
@@ -286,6 +288,8 @@
                             align-items: center;
                             justify-content: space-between;
                             padding: 0 16px;
+                            margin-bottom: 24px;
+
                             input {
                                 width: 90%;
                                 min-height: 46px;
@@ -321,6 +325,159 @@
 
                             .thumb-upload_img {
                                 display: none;
+                            }
+                        }
+                    }
+
+                    .tag {
+                        margin: 20px 0;
+                        .form-select {
+                            border-radius: 6px;
+                            width: 340px;
+                            height: 36px;
+                            border: 1px solid rgba(22, 24, 35, 0.12);
+                            background: rgb(255, 255, 255);
+                            font-size: 16px;
+                            padding: 7px 12px;
+                            cursor: pointer;
+                            option {
+                                appearance: none;
+                                padding: 10px 12px;
+                                text-indent: 5px;
+                                cursor: pointer;
+
+                                &.option-friend {
+                                    display: flex;
+                                    flex-direction: column;
+                                }
+                            }
+                        }
+                    }
+
+                    .allow-user {
+                        display: flex;
+                        gap: 16px;
+
+                        .allow-user-item {
+                            input {
+                                margin-right: 8px;
+                            }
+                        }
+                    }
+
+                    .upload-after_footer {
+                        display: flex;
+                        margin-top: 24px;
+                        gap: 16px;
+
+                        .btn-cancel,
+                        .btn-sub {
+                            width: 164px;
+                            border-radius: 0;
+                        }
+
+                        .btn-cancel {
+                            border: 1px solid rgba(22, 24, 35, 0.12);
+                            color: #000;
+
+                            &:hover {
+                                background-color: rgba(245, 245, 245, 1);
+                                border-color: rgba(22, 24, 35, 0.2);
+                            }
+                        }
+                    }
+                }
+
+                .upload-right {
+                    height: 753px;
+                    width: 40%;
+                    .main-upload {
+                        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+                        border-radius: 8px;
+                        background-color: #ffff;
+                        padding: 64px 50px;
+                        .main-upload_video {
+                            border-radius: 8px;
+                            display: flex;
+                            -webkit-box-pack: center;
+                            justify-content: center;
+                            -webkit-box-align: center;
+                            align-items: center;
+                            flex-direction: column;
+                            cursor: pointer;
+                            // transition: background 0.15s ease-in-out 0s;
+                            padding-left: 35px;
+                            padding-right: 35px;
+
+                            height: 458px;
+                            border: 2px dashed rgba(22, 24, 35, 0.12);
+                            box-sizing: border-box;
+                            border-radius: 8px;
+
+                            &.video {
+                                padding: 35px;
+
+                                video {
+                                    width: 100%;
+                                    height: 100%;
+                                    object-fit: cover;
+                                }
+
+                                .btn-cancel-video {
+                                    margin-top: 12px;
+                                    border: 1px solid rgba(22, 24, 35, 0.12);
+                                    color: #000;
+                                    border-radius: 0;
+
+                                    width: 100%;
+
+                                    &:hover {
+                                        background-color: rgba(245, 245, 245, 1);
+                                        border-color: rgba(22, 24, 35, 0.2);
+                                    }
+                                }
+                            }
+
+                            .select-title {
+                                text-align: center;
+                                margin-top: 24px;
+
+                                box-sizing: border-box;
+                                font-size: 24px;
+                                line-height: 1.5;
+                                font-weight: 700;
+                                color: rgba(22, 24, 35, 1);
+                            }
+
+                            .draw-title {
+                                margin-top: 4px;
+                                margin-bottom: 24px;
+                                text-align: center;
+
+                                box-sizing: border-box;
+                                font-size: 14px;
+                                line-height: 1.5;
+                                font-weight: 400;
+                                color: rgba(22, 24, 35, 0.75);
+                            }
+
+                            .box-text {
+                                color: rgb(115, 116, 123);
+                                list-style: none;
+                                text-align: center;
+
+                                p {
+                                    margin-bottom: 6px;
+                                    font-size: 14px;
+                                }
+
+                                p:nth-child(3) {
+                                    color: rgba(254, 44, 85, 1);
+                                }
+                            }
+
+                            .btn-upload-video {
+                                margin-top: 32px;
                             }
                         }
                     }
