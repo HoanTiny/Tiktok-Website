@@ -2,7 +2,7 @@ import * as request from 'src/utils/request';
 
 const updateProfile = async (formData) => {
     const token = localStorage.getItem('token');
-
+    console.log('formData', formData);
     try {
         const res = await request.post('auth/me', formData, {
             headers: {

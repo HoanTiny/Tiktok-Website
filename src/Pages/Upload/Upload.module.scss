@@ -179,7 +179,6 @@
             .container-upload {
                 height: 753px;
                 width: 90%;
-                display: none;
                 .main-upload {
                     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
                     border-radius: 8px;
@@ -383,6 +382,19 @@
                             &:hover {
                                 background-color: rgba(245, 245, 245, 1);
                                 border-color: rgba(22, 24, 35, 0.2);
+                            }
+                        }
+
+                        .btn-sub {
+                            &.disable {
+                                background-color: rgba(22, 24, 35, 0.12);
+                                color: rgba(22, 24, 35, 0.5);
+                                cursor: not-allowed;
+                                border: none;
+
+                                &:hover {
+                                    background-color: rgba(22, 24, 35, 0.12);
+                                }
                             }
                         }
                     }

@@ -10,7 +10,6 @@ function VideoListUser({ item, title = true }) {
     const videoRef = useRef(null); // Tham chiếu đến video
     const handleMouseEnter = () => {
         if (videoRef.current) {
-            console.log('videoRef.current', videoRef.current);
             videoRef.current.play(); // Play video khi hover vào
             setThumbnail(false);
         }
@@ -23,7 +22,6 @@ function VideoListUser({ item, title = true }) {
             videoRef.current.load(); // Load lại video để quay trở lại thumb
         }
     };
-    console.log('videoRef.current', title);
     return (
         <Link
             to={`/@${item.user.nickname}/video/${item.uuid}`}
