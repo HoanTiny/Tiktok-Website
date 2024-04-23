@@ -14,13 +14,15 @@ import {
 import style from './Upload.module.scss';
 import classNames from 'classnames/bind';
 import Menu from 'src/components/Popper/Menu';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Images from 'src/components/Images';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from 'src/components/Button';
 import { useRef } from 'react';
 import createVideo from 'src/services/createNewVideoService';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { UserAuth } from 'src/components/store';
 
 const cx = classNames.bind(style);
 function Upload() {
@@ -35,10 +37,12 @@ function Upload() {
     const [allowConnect, setAllowConnect] = useState(false);
     const [allows, setAllows] = useState([]);
     const [active, setActive] = useState(false);
-
+    const [loadings, setLoadings] = useState(false);
+    const [succes, setSucces] = useState(true);
     const videoRef = useRef(null);
     const inputRef = useRef(null);
     const canvasRef = useRef(null);
+    const { userAuth } = UserAuth();
 
     useEffect(() => {
         if (thumb) {
@@ -174,6 +178,20 @@ function Upload() {
         }
     };
 
+    //Handle reset state
+    const handleReset = () => {
+        setAllowComment(false);
+        setAllowDuet(false);
+        setAllowConnect(false);
+        setAllows([]);
+        setDescription('');
+        setSelectedFile(null);
+        setThumbnailFile(null);
+        setThumb(false);
+        setSelectedValue('public');
+        setSucces(false);
+    };
+
     // Handle post data changes
     const handleSubmit = async () => {
         // Tạo một đối tượng FormData mới
@@ -188,16 +206,20 @@ function Upload() {
         for (let i = 0; i < allows.length; i++) {
             formData.append('allows[]', allows[i]);
         }
-        // formData.append('allows[]', allows);
         console.log(allows);
         console.log('Dữ liệu', description, selectedFile, thumbnailFile, '', selectedValue, allows);
         // Gọi hàm tạo video mới từ service
         const result = await createVideo(formData);
-        console.log('result create video', result);
+        console.log('result', result);
+        if (result) {
+            setSucces(true);
+        }
+        setLoadings(false);
     };
 
     const handleClick = () => {
         if (active) {
+            setLoadings(true);
             handleSubmit();
         }
     };
@@ -222,12 +244,12 @@ function Upload() {
                         <li className={cx('sidebar-list_item')}>
                             <button className={cx('btn-upload')}>Tải lên</button>
                         </li>
-                        <li className={cx('sidebar-list_item')}>
+                        <Link to={`/`} className={cx('sidebar-list_item')}>
                             <div className={cx('sidebar-list_item-icon')}>
                                 <HomeIcon />
                             </div>
                             <span>Trang chủ</span>
-                        </li>
+                        </Link>
                         <li className={cx('sidebar-list_item')}>
                             <div className={cx('sidebar-list_item-icon')}>
                                 <PostIcon />
@@ -445,7 +467,7 @@ function Upload() {
                                     </div>
 
                                     <div className={cx('upload-after_footer')}>
-                                        <Button outline className={cx('btn-cancel')}>
+                                        <Button outline className={cx('btn-cancel')} onClick={handleReset}>
                                             Hủy bỏ
                                         </Button>
                                         <Button
@@ -514,6 +536,26 @@ function Upload() {
                                     </div>
                                 </div>
                             </div>
+
+                            <div className={cx('loading')}>
+                                {loadings && (
+                                    <div className={cx('loading-overlay')}>
+                                        <FontAwesomeIcon icon={faSpinner} spin className={cx('loading-overlay_icon')} />
+                                    </div>
+                                )}
+                            </div>
+
+                            {succes && (
+                                <div className={cx('upload-success')}>
+                                    <h3>Đăng video thành công</h3>
+                                    <Button primary className={cx('btn-manage_video')}>
+                                        <Link to={`/@${userAuth}`}>Quản lý video</Link>
+                                    </Button>
+                                    <Button outline className={cx('btn-continune_upload')} onClick={handleReset}>
+                                        Tiếp tục đăng video
+                                    </Button>
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>
