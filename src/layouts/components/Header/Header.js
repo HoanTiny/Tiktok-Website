@@ -118,6 +118,7 @@ function Header() {
                 break;
             case 'logout':
                 localStorage.removeItem('token');
+                localStorage.removeItem('username');
                 currentUser.current = false;
                 window.location.reload();
                 Navigate('/');

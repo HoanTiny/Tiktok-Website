@@ -80,7 +80,7 @@ function ModalLoginEmail({ close }) {
                     <CloseIcon width="20px" height="20px" />
                 </button>
             </div>
-            <div className={cx('header')}>{isRegisterMode ? 'Đăng nhập' : 'Đăng ký'}</div>
+            <div className={cx('header')}>Đăng nhập</div>
             <div className={cx('content')}>
                 <div className={cx('content-header')}>
                     <div className={cx('content-header_phone')}>
@@ -173,9 +173,9 @@ function ModalLoginEmail({ close }) {
                 <span className={cx('footer-text')}>
                     {isRegisterMode ? 'Bạn đã có tài khoản? ' : 'Bạn chưa có tài khoản? '}
                 </span>
-                <a href="facebook.com" className={cx('footer-link')} onClick={toggleMode}>
+                <div className={cx('footer-link')} onClick={toggleMode}>
                     {isRegisterMode ? 'Đăng nhập' : 'Đăng ký'}
-                </a>
+                </div>
             </div>
         </div>
     );

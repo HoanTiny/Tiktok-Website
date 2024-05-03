@@ -1,0 +1,320 @@
+.modal {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    .close {
+        position: absolute;
+        top: 24px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+        -webkit-box-pack: center;
+        justify-content: center;
+        z-index: 1;
+        right: 24px;
+        width: 24px;
+        height: 24px;
+        background: rgba(22, 24, 35, 0.03);
+    }
+
+    .back {
+        position: absolute;
+        top: 24px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+        -webkit-box-pack: center;
+        justify-content: center;
+        z-index: 1;
+        left: 24px;
+        width: 24px;
+        height: 24px;
+        background: rgba(22, 24, 35, 0.03);
+    }
+
+    .header {
+        color: rgb(22, 24, 35);
+        font-size: 33px;
+        margin: 64px auto 16px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .footer {
+        color: rgb(22, 24, 35);
+        font-family: TikTokFont;
+        height: 64px;
+        border-top: 0.5px solid rgba(22, 24, 35, 0.12);
+        display: flex;
+        -webkit-box-pack: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        align-items: center;
+        font-size: 15px;
+        line-height: 18px;
+        width: 483px;
+
+        a {
+            color: rgb(254, 44, 85);
+            font-weight: 600;
+            font-size: 14px;
+            margin-left: 4px;
+        }
+    }
+}
+
+.content {
+    overflow-y: scroll;
+    padding: 10px 5px 2px 13px;
+    height: 368px;
+
+    width: 363px;
+    margin: 64px auto auto;
+    padding: unset;
+
+    &-header {
+        color: rgb(22, 24, 35);
+        font-weight: 600;
+        font-size: 15px;
+        display: flex;
+        align-items: center;
+        -webkit-box-pack: justify;
+        justify-content: space-between;
+        margin-bottom: 5px;
+        a {
+            color: rgba(22, 24, 35, 0.75);
+            font-weight: 600;
+            font-size: 12px;
+            display: inline-block;
+        }
+
+        &_text {
+            color: rgba(22, 24, 35, 0.75);
+            font-weight: 600;
+            font-size: 12px;
+            display: inline-block;
+            cursor: pointer;
+        }
+    }
+
+    &-input {
+        &-phone {
+            background: rgba(22, 24, 35, 0.06);
+            border: 1px solid rgba(22, 24, 35, 0.12);
+            transition: all 0.3s ease 0s;
+            border-radius: 4px;
+            display: flex;
+
+            position: relative;
+            margin-bottom: 10px;
+            height: 44px;
+            select {
+                display: flex;
+                -webkit-box-align: center;
+                align-items: center;
+                -webkit-box-pack: justify;
+                justify-content: space-between;
+                position: relative;
+                padding: 12px;
+                height: 100%;
+                background: transparent;
+                border: none;
+
+                appearance: none;
+                /* safari */
+                -webkit-appearance: none;
+                /* other styles for aesthetics */
+
+                cursor: pointer;
+                outline: none;
+                width: 110px;
+            }
+
+            // .dropdown-icon {
+            //     position: absolute;
+            // }
+
+            .input-text {
+                background: transparent;
+                margin-left: 12px;
+            }
+
+            &.active {
+                &::before {
+                    content: '';
+                    width: 1px;
+                    height: 30px;
+                    background: rgba(22, 24, 35, 0.12);
+                    right: 0px;
+                    left: 32%;
+                    top: 8px;
+                    position: absolute;
+                }
+
+                &::after {
+                    --size: 0.5rem;
+                    content: '';
+                    position: absolute;
+                    // right: 1rem;
+                    pointer-events: none;
+                    border-left: var(--size) solid transparent;
+                    border-right: var(--size) solid transparent;
+                    border-top: var(--size) solid black;
+                    top: 45%;
+                    left: 26%;
+                }
+            }
+
+            &.content-input-phone2 {
+                position: relative;
+                &.active2 {
+                    border: 1px solid red;
+                }
+                svg {
+                    position: absolute;
+                    right: 10px;
+                    top: 36%;
+                    color: #babbae;
+                    cursor: pointer;
+                }
+            }
+        }
+
+        &-ma {
+            display: flex;
+            .input-number {
+                border-radius: 2px;
+                background-color: rgba(22, 24, 35, 0.06);
+                border: 1px solid rgba(22, 24, 35, 0.12);
+                padding-inline-start: 12px;
+                color: rgb(22, 24, 35);
+                line-height: 100%;
+                outline: none;
+                font-size: 16px;
+                caret-color: rgb(254, 44, 85);
+                width: 100%;
+                padding-inline-end: unset;
+            }
+
+            input::-webkit-outer-spin-button,
+            input::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+
+            .btn-sibmit-send {
+                color: rgb(22, 24, 35);
+                font-weight: 600;
+                margin: 0px;
+                background-color: rgba(22, 24, 35, 0.06);
+                border-color: rgba(22, 24, 35, 0.12);
+                border-width: 1.5px;
+                border-style: solid;
+                border-radius: 0px 4px 4px 0px;
+                border-inline-start-width: 1.5px;
+                cursor: pointer;
+                font-size: 16px;
+                padding: 0px 16px;
+                height: 44px;
+                flex-shrink: 0;
+                box-sizing: content-box;
+                border-left: none;
+            }
+        }
+    }
+
+    &-link {
+        color: rgba(22, 24, 35, 0.75);
+        font-weight: 600;
+        font-size: 12px;
+        display: inline-block;
+    }
+
+    &-btn-submit {
+        width: 100%;
+        display: block;
+
+        margin-top: 10px;
+    }
+}
+
+.content-item {
+    font-family: TikTokFont;
+    font-weight: 600;
+    font-size: 15px;
+    border-radius: 8px;
+    padding: 0px 12px;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    height: 44px;
+    position: relative;
+    cursor: pointer;
+    margin-bottom: 12px;
+    word-break: keep-all;
+    white-space: nowrap;
+    background: rgb(255, 255, 255);
+    border-width: 1px;
+    border-style: solid;
+    color: rgb(22, 24, 35);
+    border-color: rgba(22, 24, 35, 0.12);
+    width: 363px;
+
+    svg {
+        left: 12px;
+        font-size: 20px;
+        position: absolute;
+        display: flex;
+    }
+}
+
+.error-message {
+    color: red;
+    font-size: 10px;
+}
+
+@keyframes spinLoading {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin {
+    animation: spinLoading 2s linear infinite;
+}
+
+.birthday {
+    margin-bottom: 10px;
+
+    .controls {
+        display: flex;
+        width: 100%;
+        gap: 10px;
+        select {
+            flex: 1;
+            font-size: 16px;
+            width: 115px;
+            height: 44px;
+            border-radius: 4px;
+        }
+    }
+
+    .note-birthday {
+        color: rgba(22, 24, 35, 0.5);
+        font-size: 14px;
+        line-height: 20px;
+        margin-bottom: 16px;
+    }
+}

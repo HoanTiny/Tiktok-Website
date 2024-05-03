@@ -1,21 +1,12 @@
 import classNames from 'classnames/bind';
-import styles from './ModalLogin.module.scss';
+import styles from './ModalSignUp.module.scss';
 import Popup from 'reactjs-popup';
 import styled from 'styled-components';
 
-import {
-    CloseIcon,
-    GoogleIcon,
-    FacebookIcon,
-    QRIcon,
-    UserIcon,
-    TwitterIcon,
-    LineIcon,
-    KakaoIcon,
-    AppleIcon,
-} from '~/components/Icons';
-import ModalLoginEmail from './ModalLoginEmail';
-import ModalSignUp from '../ModalSignUp';
+import { CloseIcon, GoogleIcon, FacebookIcon, UserIcon, LineIcon, KakaoIcon } from '~/components/Icons';
+import ModalLogin from '../ModalLogin';
+import ModalSignUpEmailorPhone from './SignUpEmailorPhone/ModalSignUpEmailorPhone';
+// import ModalLoginEmail from '../ModalLogin/ModalLoginEmail';
 
 const StyledPopup = styled(Popup)`
     // use your custom style for ".popup-overlay"
@@ -39,40 +30,24 @@ const StyledPopup = styled(Popup)`
 
 const cx = classNames.bind(styles);
 
-function ModalLogin({ close }) {
+function ModalSignUp({ close }) {
     return (
         <div className={cx('modal')}>
             <button className={cx('close')} onClick={close}>
                 <CloseIcon width="20px" height="20px" />
             </button>
-            <div className={cx('header')}> Đăng nhập vào Tiktok </div>
+            <div className={cx('header')}> Đăng ký Tiktok </div>
             <div className={cx('content')}>
-                <div className={cx('content-item')}>
-                    <QRIcon />
-                    <span>Sử dụng mã QR</span>
-                </div>
                 <StyledPopup
                     trigger={
                         <div className={cx('content-item')}>
                             <UserIcon />
-                            <span>Số điện thoại / Email / TikTok ID</span>
+                            <span>Sử dụng số điện thoại hoặc email</span>
                         </div>
                     }
                     modal
                 >
-                    {(close) => <ModalLoginEmail close={close} />}
-                </StyledPopup>
-
-                <StyledPopup
-                    trigger={
-                        <div className={cx('content-item')}>
-                            <GoogleIcon />
-                            <span>Tiếp tục với Google</span>
-                        </div>
-                    }
-                    modal
-                >
-                    {(close) => <ModalLoginEmail close={close} />}
+                    {(close) => <ModalSignUpEmailorPhone close={close} />}
                 </StyledPopup>
 
                 <div className={cx('content-item')}>
@@ -84,10 +59,6 @@ function ModalLogin({ close }) {
                     <FacebookIcon />
                     <span>Tiếp tục với Facebook</span>
                 </div>
-                <div className={cx('content-item')}>
-                    <TwitterIcon />
-                    <span>Tiếp tục với Twitter</span>
-                </div>
 
                 <div className={cx('content-item')}>
                     <LineIcon />
@@ -96,11 +67,6 @@ function ModalLogin({ close }) {
                 <div className={cx('content-item')}>
                     <KakaoIcon />
                     <span>Tiếp tục với Kakao</span>
-                </div>
-
-                <div className={cx('content-item')}>
-                    <AppleIcon />
-                    <span>Tiếp tục với Apple</span>
                 </div>
             </div>
 
@@ -127,21 +93,20 @@ function ModalLogin({ close }) {
                 </p>
             </div>
             <div className={cx('footer')}>
-                <span className={cx('footer-text')}>Bạn không có tài khoản? </span>
+                <span className={cx('footer-text')}>Bạn đã có tài khoản? </span>
                 <StyledPopup
                     trigger={
                         <div href="facebook.com" className={cx('footer-link')}>
-                            Đăng ký
+                            Đăng nhập
                         </div>
                     }
-                    modal
-                    nested
+                    // modal
                 >
-                    {(close) => <ModalSignUp close={close} />}
+                    {(close) => <ModalLogin close={close} />}
                 </StyledPopup>
             </div>
         </div>
     );
 }
 
-export default ModalLogin;
+export default ModalSignUp;
