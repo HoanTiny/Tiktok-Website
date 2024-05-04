@@ -88,7 +88,6 @@ function Header() {
     const currentUser = useRef();
 
     const { userAuth } = UserAuth();
-    console.log(`userAuth`, userAuth);
     if (token) {
         currentUser.current = true;
     } else {

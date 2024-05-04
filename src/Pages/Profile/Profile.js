@@ -25,6 +25,7 @@ import { useLocation } from 'react-router-dom';
 import 'react-loading-skeleton/dist/skeleton.css';
 import Skeleton from 'react-loading-skeleton';
 import VideoListUser from 'src/components/VideoListUser/VideoListUser';
+import Images from 'src/components/Images/Images';
 const cx = classNames.bind(styles);
 
 const StyledPopup = styled(Popup)`
@@ -176,7 +177,14 @@ function Profile() {
                 <header className={cx('header')}>
                     <div className={cx('header__container')}>
                         <div className={cx('header__container-avatar')}>
-                            <img src={dataProfile.avatar} alt="avatar" />
+                            <Images
+                                src={dataProfile.avatar}
+                                className={cx('user-avatar')}
+                                alt="Avatar"
+                                fallback="https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg"
+                            />
+
+                            {/* <img src={dataProfile.avatar} alt="avatar" /> */}
                         </div>
                         <div className={cx('header__container__info')}>
                             <h3>{dataProfile.nickname}</h3>

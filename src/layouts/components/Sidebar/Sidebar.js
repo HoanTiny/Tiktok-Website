@@ -53,7 +53,6 @@ function Sidebar() {
 
     useEffect(() => {
         let isMounted = true;
-        console.log('currentPerPage', currentPerPage);
         userService
             .getSuggested({ page: currentPerPage, perPage: 4 })
             .then((data) => {

@@ -4,7 +4,6 @@ import styles from './ModalSignUpEmailorPhone.module.scss';
 import { CloseIcon, BackIcon, EyePass, EyePassActive } from '~/components/Icons';
 import Button from 'src/components/Button';
 import { useState, useEffect } from 'react';
-import { login } from 'src/services/loginAccountService';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
@@ -20,7 +19,6 @@ function ModalSignUpEmailorPhone({ close }) {
     const [errorMessage, setErrorMessage] = useState('');
     const [disabledBtn, setDisabledBtn] = useState(true);
     const [animation, setAnimation] = useState(false);
-    const [isPasswordValid, setPasswordValid] = useState(true);
     let navigate = useNavigate();
     useEffect(() => {
         // Kiểm tra nếu email và password không rỗng thì bỏ disable button
@@ -286,11 +284,7 @@ function ModalSignUpEmailorPhone({ close }) {
                                 />
                             </div>
 
-                            <div
-                                className={cx('content-input-phone', 'content-input-phone2', {
-                                    active2: !isPasswordValid,
-                                })}
-                            >
+                            <div className={cx('content-input-phone', 'content-input-phone2')}>
                                 <input
                                     type={isActiveEye ? 'password' : 'text'}
                                     className={cx('input-text')}
